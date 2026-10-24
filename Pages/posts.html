@@ -3,9 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Craigslist Redesign</title>
+    <link rel="stylesheet" href="../Style/style.css">
 </head>
 <body>
-    
+    <header class="header">
+        <div class="header_top">
+            <div class="header_top_left">
+                <div class="logo">
+                    <a href="index.html">
+                    <img src="../Images/Icons/logo.svg" alt="Home">
+                    </a>
+                </div>
+                <div class="theme_toggle">
+                    <input type="checkbox" id="check">
+                    <label for="check" class="toggle_button"></label>
+                </div>
+            </div>
+
+            <form class="search_bar">
+                <input type="search" placeholder="Search Listings..">
+                <button type="submit" aria-label="Search">
+                    <img src="../Images/Icons/search.svg" alt="">
+                </button>
+            </form>
+
+            <div class="header_top_right">
+                <a href="account.html">Account</a>
+                <a href="cart.html">Cart</a>
+                <button class="sidebar_button" aria-expanded="false" aria-controls="sidebar" aria-label="Open navigation">
+                    <img src="../Images/Icons/hamburger.svg" alt="">
+                </button>
+            </div>
+        </div>
+
+        <nav class="header_nav_bottom" id="sidebar">
+            <a href="posts.html">Hire</a>
+            <a href="search.html">Items</a>
+            <a href="discussions.html">Discussion Forum</a>
+        </nav>
+    </header>
+
+    <main class="content">
+        <h1>header</h1>
+        <p>asjndasndkja</p>
+    </main>
+    <script src="../Scripts/navigation.js" defer></script>
 </body>
 </html>
