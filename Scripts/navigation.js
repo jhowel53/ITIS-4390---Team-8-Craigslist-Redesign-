@@ -27,3 +27,23 @@ if (menuButton && sidebar) {
         }
     });
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+    fetch('../Components/header.html')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to load header component');
+            }
+            return response.text();
+        })
+        .then(data => {
+            document.getElementById('header-placeholder').innerHTML = data;
+            
+            // Optional: Re-initialize any interactive header listeners 
+            // (like hamburger sidebar toggle) if they depend on DOM elements loaded dynamically.
+            if (typeof initHeaderEvents === 'function') {
+                initHeaderEvents();
+            }
+        })
+        .catch(error => console.error('Error loading header:', error));
+});

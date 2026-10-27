@@ -1,0 +1,51 @@
+<header class="header">
+        <div class="header_top">
+            <div class="header_top_left">
+                <div class="logo">
+                    <a href="#" onclick="switchPage('home')">
+                        <!-- Embedded SVG Logo -->
+                        <img src="../Images/Icons/logo.svg" alt="Home">
+                    </a>
+                </div>
+
+                <!-- Theme Toggle -->
+                <div class="theme_toggle">
+                    <input type="checkbox" id="check" onchange="toggleTheme()">
+                    <label for="check" class="toggle_button" title="Toggle dark/light theme"></label>
+                </div>
+
+                <!-- Location Selector -->
+                <div class="location-select-wrap">
+                    <img src="../Images/Icons/location.svg" alt="">
+                    <select id="locationSelect">
+                        <option>SF Bay Area</option>
+                        <option>New York</option>
+                        <option>Seattle</option>
+                        <option>Austin</option>
+                        <option>Chicago</option>
+                    </select>
+                </div>
+            </div>
+
+            <form class="search_bar" onsubmit="event.preventDefault(); triggerSearch();">
+                <input type="search" id="searchInput" placeholder="Search listings, housing, gigs..." oninput="triggerSearch()" width="16px">
+                <button type="submit" aria-label="Search">
+                    <img src="../Images/Icons/search.svg" alt="">
+                </button>
+            </form>
+
+            <div class="header_top_right">
+                <a href="account.html">Account</a>
+                <a href="cart.html">Cart</a>
+                <button class="sidebar_button" aria-expanded="false" aria-controls="sidebar" aria-label="Open navigation">
+                    <img src="../Images/Icons/hamburger.svg" alt="">
+                </button>
+            </div>
+        </div>
+        
+        <nav class="header_nav_bottom" id="sidebar">
+            <a href="posts.html">Hire</a>
+            <a href="search.html">Items</a>
+            <a href="discussions.html">Discussion Forum</a>
+        </nav>
+    </header>
