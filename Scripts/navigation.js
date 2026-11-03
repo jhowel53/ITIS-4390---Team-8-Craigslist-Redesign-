@@ -48,6 +48,67 @@ document.addEventListener("DOMContentLoaded", function () {
         .catch(error => console.error('Error loading header:', error));
 });
 
+// Reusable loading feedback for page navigation.
+function getPageLoader() {
+    let loader = document.getElementById('page-loader');
+
+    if (!loader) {
+        loader = document.createElement('div');
+        loader.id = 'page-loader';
+        loader.className = 'page-loader';
+        loader.setAttribute('role', 'status');
+        loader.setAttribute('aria-label', 'Loading page');
+        loader.innerHTML = '<div class="page-loader__spinner" aria-hidden="true"></div>';
+        document.body.appendChild(loader);
+    }
+
+    return loader;
+}
+
+function showPageLoader() {
+    const loader = getPageLoader();
+    document.body.setAttribute('aria-busy', 'true');
+    loader.classList.add('is-visible');
+}
+
+function hidePageLoader() {
+    const loader = document.getElementById('page-loader');
+    document.body.removeAttribute('aria-busy');
+
+    if (loader) {
+        loader.classList.remove('is-visible');
+    }
+}
+
+// Show a brief loading state before moving to another page in the prototype.
+document.addEventListener('click', event => {
+    const link = event.target.closest('a[href]');
+
+    if (!link) return;
+
+    const href = link.getAttribute('href');
+    if (
+        !href ||
+        href === '#' ||
+        href.startsWith('#') ||
+        href.startsWith('mailto:') ||
+        href.startsWith('tel:') ||
+        link.target === '_blank' ||
+        event.ctrlKey ||
+        event.metaKey ||
+        event.shiftKey ||
+        event.altKey
+    ) {
+        return;
+    }
+
+    event.preventDefault();
+    showPageLoader();
+
+    window.setTimeout(() => {
+        window.location.href = href;
+    }, 450);
+});
 function triggerSearch() {
     const input = document.getElementById("searchInput");
     const suggestions = document.getElementById("searchSuggestions");
