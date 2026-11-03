@@ -146,6 +146,42 @@ input:checked + .toggle_button:before{
     height: 20px;
 }
 
+.search_suggestions {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    z-index: 20;
+    width: 100%;
+    max-height: 280px;
+    overflow-y: auto;
+    padding: 4px 0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background: white;
+    box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
+    list-style: none;
+}
+
+.search_suggestion button {
+    display: block;
+    width: 100%;
+    padding: 8px 12px;
+    color: #222;
+    text-align: left;
+    line-height: 1.4;
+}
+
+.search_suggestion button:hover,
+.search_suggestion button:focus-visible {
+    background: #f0e5f5;
+    outline: none;
+}
+
+.search_empty_state {
+    margin-top: 16px;
+    color: #524f4f;
+}
+
 .header_top_right {
     position: relative;
     grid-area: right;

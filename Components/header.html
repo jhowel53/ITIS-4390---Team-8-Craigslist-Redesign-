@@ -27,11 +27,13 @@
                 </div>
             </div>
 
+            <!-- Search bar form with real-time input trigger, submit handler, and accessibility features -->
             <form class="search_bar" onsubmit="event.preventDefault(); triggerSearch();">
-                <input type="search" id="searchInput" placeholder="Search listings, housing, gigs..." oninput="triggerSearch()" width="16px">
+                <input type="search" id="searchInput" placeholder="Search listings, housing, gigs..." oninput="triggerSearch()" aria-label="Search page content" aria-controls="searchSuggestions" aria-expanded="false" autocomplete="off">
                 <button type="submit" aria-label="Search">
                     <img src="../Images/Icons/search.svg" alt="">
                 </button>
+                <ul class="search_suggestions" id="searchSuggestions" role="list" aria-label="Search suggestions" aria-live="polite" hidden></ul>
             </form>
 
             <div class="header_top_right">
