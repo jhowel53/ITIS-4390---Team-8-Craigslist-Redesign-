@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="../Style/style.css">
+
+</head>
+<body class="signup-page">
+    <div id="header-placeholder"></div>
+
+    <div class="signup-wrapper">
+        <h1 class="signup-header">Sign Up</h1>
+        <p id="error-message"></p>
+        <form class="signup-form" id="form">
+            <div>
+                <label for="firstname-input"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="#1f1f1f"><path d="M9.18,10.83Q8,9.65 8,8T9.18,5.18T12,4t2.83,1.18T16,8t-1.17,2.82T12,12T9.18,10.83ZM4,20V17.2q0-0.85 0.44-1.56q0.44-0.71 1.16-1.09q1.55-0.78 3.15-1.16T12,13t3.25,0.39t3.15,1.16q0.72,0.38 1.16,1.09T20,17.2V20H4Z"/></svg></label>
+                <input type="text" name="firstname" id="firstname-input" placeholder="First Name">
+            </div>
+            <div>
+                <label for="email-input"><span>@</span></label>
+                <input type="email" name="email" id="email-input" placeholder="Email">
+            </div>
+            <div>
+                <label for="password-input"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="#1f1f1f"><path d="M6,22q-0.82,0-1.41-0.59T4,20V10Q4,9.17 4.59,8.59T6,8H7V6Q7,3.92 8.46,2.46T12,1t3.54,1.46T17,6V8h1q0.82,0 1.41,0.59T20,10V20q0,0.82-0.59,1.41T18,22H6Zm7.41-5.59Q14,15.83 14,15t-0.59-1.41T12,13t-1.41,0.59Q10,14.18 10,15t0.59,1.41T12,17t1.4１-0.59ZM9,8h6V6q0-１.２５-０.８８-２.１３T１２,３T９.８８,３.８８T９,６V８Z"/></svg></label>
+                <input type="password" name="password" id="password-input" placeholder="Password">
+            </div>
+            <div>
+                <label for="confirm-password-input"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="#1f1f1f"><path d="M6,22q-0.82,0-1.41-0.59T4,20V10Q4,9.17 4.59,8.59T6,8H7V6Q7,3.92 8.46,2.46T12,1t3.54,1.46T17,6V8h1q0.82,0 1.41,0.59T20,10V20q0,0.82-0.59,1.41T18,22H6Zm7.41-5.59Q14,15.83 14,15t-0.59-1.41T12,13t-1.41,0.59Q10,14.18 10,15t0.59,1.41T12,17t1.4１-0.59ZM9,8h6V6q0-１.２５-０.８８-２.１３T１２,３T９.８８,３.８８T９,６V８Z"/></svg></label>
+                <input type="password" name="confirm-password" id="confirm-password-input" placeholder="Confirm Password">
+            </div>
+            <button type="submit">Sign Up</button>
+        </form>
+        <p>Already have an account? <a href="login.html">Login</a></p>
+    </div>
+    <script src="../Scripts/navigation.js" defer></script>
+    <script src="../Scripts/load-header.js" defer></script>
+    <script src="../Scripts/validation.js" defer></script>
+</body>
+</html>

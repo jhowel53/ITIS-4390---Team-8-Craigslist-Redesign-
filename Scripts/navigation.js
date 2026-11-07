@@ -1,7 +1,9 @@
-const menuButton = document.querySelector(".sidebar_button");
-const sidebar = document.getElementById("sidebar");
+function initHeaderEvents() {
+    const menuButton = document.querySelector(".sidebar_button");
+    const sidebar = document.getElementById("sidebar");
 
-if (menuButton && sidebar) {
+    if (!menuButton || !sidebar) return;
+
     const setMenuOpen = isOpen => {
         sidebar.classList.toggle("is-open", isOpen);
         menuButton.setAttribute("aria-expanded", String(isOpen));
@@ -38,6 +40,14 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .then(data => {
             document.getElementById('header-placeholder').innerHTML = data;
+
+            // Highlight the current page link in the navigation header.
+            const currentPath = window.location.pathname;
+            document.querySelectorAll('#header-placeholder a[href]').forEach(link => {
+                if (new URL(link.href).pathname === currentPath) {
+                    link.setAttribute('aria-current', 'page');
+                }
+            });
             
             // Optional: Re-initialize any interactive header listeners 
             // (like hamburger sidebar toggle) if they depend on DOM elements loaded dynamically.
