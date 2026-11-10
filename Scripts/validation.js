@@ -19,6 +19,10 @@ function getInputError(input, isSubmitting = false) {
         return 'Name must be at least 2 characters long'
     }
 
+    if (/\d/.test(value)) {
+        return 'Name cannot be a number'
+    }
+
     if (input === email_input && value === '') {
         return 'Email is required'
     }
