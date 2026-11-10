@@ -11,16 +11,19 @@ const emailPattern = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 function getInputError(input, isSubmitting = false) {
     const value = input.value.trim()
 
-    if (input === firstname_input && value === '') {
-        return 'First name is required'
-    }
+    if (input === firstname_input){
 
-    if (input === firstname_input && value.length < 2) {
-        return 'Name must be at least 2 characters long'
-    }
+        if (value === '') {
+            return 'First name is required'
+        }
 
-    if (/\d/.test(value)) {
-        return 'Name cannot be a number'
+        if (value.length < 2) {
+            return 'Name must be at least 2 characters long'
+        }
+
+        if (/\d/.test(value)) {
+            return 'Name cannot be a number'
+        }
     }
 
     if (input === email_input && value === '') {
