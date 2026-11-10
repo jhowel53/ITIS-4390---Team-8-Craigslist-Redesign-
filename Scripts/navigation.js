@@ -58,6 +58,34 @@ document.addEventListener("DOMContentLoaded", function () {
         .catch(error => console.error('Error loading header:', error));
 });
 
+document.addEventListener("DOMContentLoaded", function () {
+    fetch('../Components/footer.html')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to load footer component');
+            }
+            return response.text();
+        })
+        .then(data => {
+            document.getElementById('footer-placeholder').innerHTML = data;
+
+            // Highlight the current page link in the navigation footer.
+            const currentPath = window.location.pathname;
+            document.querySelectorAll('#footer-placeholder a[href]').forEach(link => {
+                if (new URL(link.href).pathname === currentPath) {
+                    link.setAttribute('aria-current', 'page');
+                }
+            });
+            
+            // Optional: Re-initialize any interactive footer listeners 
+            // (like hamburger sidebar toggle) if they depend on DOM elements loaded dynamically.
+            if (typeof initFooterEvents === 'function') {
+                initFooterEvents();
+            }
+        })
+        .catch(error => console.error('Error loading footer:', error));
+});
+
 // Reusable loading feedback for page navigation.
 function getPageLoader() {
     let loader = document.getElementById('page-loader');
