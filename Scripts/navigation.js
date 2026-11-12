@@ -1,6 +1,11 @@
 function initHeaderEvents() {
     const menuButton = document.querySelector(".sidebar_button");
     const sidebar = document.getElementById("sidebar");
+    const headerTop = document.querySelector(".header_top");
+    const searchToggle = document.querySelector(".mobile-search-toggle");
+    const searchForm = document.querySelector(".search_bar");
+    const searchInput = document.getElementById("searchInput");
+    const searchCloseButton = document.querySelector(".search-close-button");
 
     if (!menuButton || !sidebar) return;
 
@@ -24,8 +29,53 @@ function initHeaderEvents() {
     });
     // Close sidebar when the user clicks outside of hamburger menu.
     document.addEventListener("click", event => {
-        if (!sidebar.contains(event.target) && !menuButton.contains(event.target)) {
+        const isSearchInteraction = searchToggle?.contains(event.target) ||
+            searchForm?.contains(event.target);
+
+        if (
+            !sidebar.contains(event.target) &&
+            !menuButton.contains(event.target) &&
+            !isSearchInteraction
+        ) {
             setMenuOpen(false);
+        }
+    });
+
+    if (!headerTop || !searchToggle || !searchForm || !searchInput || !searchCloseButton) {
+        return;
+    }
+
+    const setSearchOpen = isOpen => {
+        headerTop.classList.toggle("is-search-open", isOpen);
+        searchToggle.setAttribute("aria-expanded", String(isOpen));
+        searchToggle.setAttribute("aria-label", isOpen ? "Close search" : "Open search");
+
+        if (isOpen) {
+            searchInput.focus();
+        } else {
+            searchInput.value = "";
+            triggerSearch();
+            searchToggle.focus();
+        }
+    };
+
+    searchToggle.addEventListener("click", () => {
+        setSearchOpen(true);
+    });
+    searchCloseButton.addEventListener("click", () => {
+        setSearchOpen(false);
+    });
+    searchInput.addEventListener("keydown", event => {
+        if (event.key === "Escape") {
+            setSearchOpen(false);
+        }
+    });
+    document.addEventListener("click", event => {
+        if (
+            headerTop.classList.contains("is-search-open") &&
+            !headerTop.contains(event.target)
+        ) {
+            setSearchOpen(false);
         }
     });
 }
@@ -174,9 +224,11 @@ function triggerSearch() {
         option.className = "search_suggestion";
         button.type = "button";
         button.textContent = text.length > 100 ? `${text.slice(0, 97)}...` : text;
-        button.addEventListener("click", () => {
+        button.addEventListener("click", event => {
+            event.stopPropagation();
             input.value = text;
             triggerSearch();
+            input.focus();
         });
         option.append(button);
         suggestions.append(option);

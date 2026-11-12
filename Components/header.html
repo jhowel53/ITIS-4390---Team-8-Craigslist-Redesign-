@@ -1,6 +1,9 @@
 <header class="header">
         <div class="header_top">
             <div class="header_top_left">
+                <button class="mobile-search-toggle" type="button" aria-label="Open search" aria-expanded="false" aria-controls="searchInput">
+                    <img src="../Images/Icons/search.svg" alt="">
+                </button>
                 <div class="logo">
                     <a href="#" onclick="switchPage('home')">
                         <!-- Embedded SVG Logo -->
@@ -19,22 +22,33 @@
                         <option>Chicago</option>
                     </select>
                 </div>
+
+                <div class="theme_toggle">
+                    <input type="checkbox" id="check">
+                    <label for="check" class="toggle_button" title="Toggle theme"></label>
+                </div>
             </div>
 
             <!-- Search bar form with real-time input trigger, submit handler, and accessibility features -->
             <form class="search_bar" onsubmit="event.preventDefault(); triggerSearch();">
-                <input type="search" id="searchInput" placeholder="Search listings, housing, gigs..." oninput="triggerSearch()" aria-label="Search page content" aria-controls="searchSuggestions" aria-expanded="false" autocomplete="off">
+                <input type="search" id="searchInput" placeholder="Search..." oninput="triggerSearch()" aria-label="Search page content" aria-controls="searchSuggestions" aria-expanded="false" autocomplete="off">
                 <button type="submit" aria-label="Search">
                     <img src="../Images/Icons/search.svg" alt="">
+                </button>
+                <button class="search-close-button" type="button" aria-label="Close search">
+                    <span aria-hidden="true">&times;</span>
                 </button>
                 <ul class="search_suggestions" id="searchSuggestions" role="list" aria-label="Search suggestions" aria-live="polite" hidden></ul>
             </form>
 
             <div class="header_top_right">
-                <a href="signup.html">Account</a>
-                <a href="cart.html">Cart</a>
+                <a class="account-link" href="signup.html">
+                    <img src="../Images/Icons/person_24dp_1F1F1F_FILL1_wght400_GRAD0_opsz24.svg" alt="">
+                    <span>Sign Up / Login</span>
+                </a>
+                <a class="saved-posts-link" href="cart.html">Saved Posts</a>
                 <button class="sidebar_button" aria-expanded="false" aria-controls="sidebar" aria-label="Open navigation">
-                    <img src="../Images/Icons/hamburger.svg" alt="">
+                    <span></span><span></span><span></span>
                 </button>
             </div>
         </div>
@@ -43,9 +57,7 @@
             <a href="hiring.html">Hire</a>
             <a href="search.html">Items</a>
             <a href="discussions.html">Discussion Forum</a>
-            <div class="theme_toggle">
-                <input type="checkbox" id="check" onchange="toggleTheme()">
-                <label for="check" class="toggle_button" title="Toggle dark/light theme"></label>
-            </div>
+            <a class="mobile-saved-posts-link" href="cart.html">Saved Posts</a>
+            <a class="mobile-settings-link" href="setting.html">Settings</a>
         </nav>
     </header>
