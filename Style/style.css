@@ -9,7 +9,11 @@
 body {
     font-family: Arial, sans-serif;
     line-height: 1.5;
-    background-color: #fbf9f9;
+    min-height: 100vh;
+    background: #936CA9;
+    background: linear-gradient(360deg, rgba(140, 105, 160, 1) 0%, rgba(255, 255, 255, 1) 100%);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
 }
 
 /* HEADER: desktop defaults */
@@ -93,9 +97,9 @@ body {
 }
 
 .location-select-wrap:focus-within {
-    border-color: #7e35a8;
+    border-color: rgb(126 53 168 / 30%);
     background-color: #e7dcec;
-    box-shadow: 0 0 0 2px rgb(126 53 168 / 18%);
+    box-shadow: none;
 }
 
 .theme_toggle {
@@ -185,6 +189,12 @@ body {
     border-radius: 8px;
     background: transparent;
     font-size: 18px;
+    outline: none;
+}
+
+.location-select-wrap select:focus-visible,
+.search_bar input:focus-visible,
+.search_bar button:focus-visible {
     outline: none;
 }
 
@@ -865,12 +875,15 @@ textarea:focus-visible {
 /* DARK MODE */
 
 html[data-theme="dark"] body {
-    background-color: #121212;
+    background: #242424;
+    background: linear-gradient(360deg, rgba(140, 105, 160, 1) 0%, rgba(36, 36, 36, 1) 100%);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
     color: #f5f5f5;
 }
 
 html[data-theme="dark"] .header {
-    background-color: #1f1f1f;
+    background-color: #6e6e6e;
     color: #f5f5f5;
 }
 
@@ -881,9 +894,9 @@ html[data-theme="dark"] .location-select-wrap {
 }
 
 html[data-theme="dark"] .location-select-wrap:focus-within {
-    background-color: #333333;
-    border-color: #c77dff;
-    box-shadow: 0 0 0 2px rgb(199 125 255 / 25%);
+    background-color: #2b2b2b;
+    border-color: #666666;
+    box-shadow: none;
 }
 
 html[data-theme="dark"] .location-select-wrap select {
@@ -935,8 +948,16 @@ html[data-theme="dark"] .header_top_right a:active {
 }
 
 html[data-theme="dark"] .header_top_right a:hover,
+html[data-theme="dark"] .header_top_right a:active,
 html[data-theme="dark"] .header_top_right a:focus-visible {
-    background-color: #6a1b9a;
+    background-color: #936ca9;
+    border-color: #936ca9;
+    color: #1c1c21;
+}
+
+html[data-theme="dark"] .header_top_right a[aria-current="page"] {
+    background-color: #9c4dcc;
+    border-color: #9c4dcc;
     color: #ffffff;
 }
 
@@ -972,8 +993,20 @@ html[data-theme="dark"] .signup-page {
 
 html[data-theme="dark"] .signup-form input {
     background-color: #2b2b2b;
-    border-color: #666666;
+    border-color: #936ca9;
     color: #f5f5f5;
+}
+
+html[data-theme="dark"] .signup-form input:hover {
+    border-color: #9c4dcc;
+}
+
+html[data-theme="dark"] .signup-form input:focus {
+    border-color: #c77dff;
+}
+
+html[data-theme="dark"] .signup-form div.incorrect input {
+    border-color: #de6464;
 }
 
 html[data-theme="dark"] .signup-form input::placeholder {
@@ -1004,8 +1037,7 @@ html[data-theme="dark"] .page-loader__spinner {
 /* Make dark icons visible */
 html[data-theme="dark"] .account-link img,
 html[data-theme="dark"] .mobile-search-toggle img,
-html[data-theme="dark"] .search_bar button img,
-html[data-theme="dark"] .location-select-wrap img {
+html[data-theme="dark"] .search_bar button img {
     filter: brightness(0) invert(1);
 }
 
