@@ -11,6 +11,7 @@ const emailPattern = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 function getInputError(input, isSubmitting = false) {
     const value = input.value.trim()
 
+    //Validates the first name input field
     if (input === firstname_input){
 
         if (value === '') {
@@ -20,7 +21,7 @@ function getInputError(input, isSubmitting = false) {
         if (value.length < 2) {
             return 'Name must be at least 2 characters long'
         }
-
+        //Check if the name contains any numbers
         if (/\d/.test(value)) {
             return 'Name cannot be a number'
         }
