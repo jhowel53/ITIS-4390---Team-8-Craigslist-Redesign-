@@ -12,15 +12,16 @@
 
     <div class="signup-wrapper">
         <h1 class="signup-header">Login</h1>
-        <p id="error-message"></p>
-        <form class="signup-form" id="form">
+        <form class="signup-form" id="form" novalidate>
             <div>
                 <label for="email-input"><span>@</span></label>
-                <input type="email" name="email" id="email-input" placeholder="Email">
+                <input type="email" name="email" id="email-input" placeholder="Email" aria-describedby="email-error">
+                <p class="field-error" id="email-error" aria-live="polite"></p>
             </div>
             <div>
                 <label for="password-input"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="#1f1f1f"><path d="M6,22q-0.82,0-1.41-0.59T4,20V10Q4,9.17 4.59,8.59T6,8H7V6Q7,3.92 8.46,2.46T12,1t3.54,1.46T17,6V8h1q0.82,0 1.41,0.59T20,10V20q0,0.82-0.59,1.41T18,22H6Zm7.41-5.59Q14,15.83 14,15t-0.59-1.41T12,13t-1.41,0.59Q10,14.18 10,15t0.59,1.41T12,17t1.4１-0.59ZM9,8h6V6q0-１.２５-０.８８-２.１３T１２,３T９.８８,３.８８T９,６V８Z"/></svg></label>
-                <input type="password" name="password" id="password-input" placeholder="Password">
+                <input type="password" name="password" id="password-input" placeholder="Password" aria-describedby="password-error">
+                <p class="field-error" id="password-error" aria-live="polite"></p>
             </div>
             <button type="submit">Login</button>
         </form>

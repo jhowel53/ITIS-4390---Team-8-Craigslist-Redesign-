@@ -403,8 +403,8 @@ body {
 
 .signup-form > div {
     width: 100%;
-    display: flex;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: 50px minmax(0, 1fr);
 }
 
 .signup-form label {
@@ -431,7 +431,6 @@ body {
 
 .signup-form input {
     box-sizing: border-box;
-    flex-grow: 1;
     min-width: 0;
     height: 50px;
     padding: 1em;
@@ -506,9 +505,17 @@ body {
     border-color: #de6464;
 }
 
-#error-message {
+.signup-form .field-error {
+    grid-column: 2;
+    margin-top: 8px;
     color: #de6464;
-    font-weight: 500;
+    font-size: 16px;
+    line-height: 1.35;
+    text-align: left;
+}
+
+.signup-form .field-error:empty {
+    display: none;
 }
 
 .success-message {
@@ -1113,7 +1120,7 @@ html[data-theme="dark"] .signup-page .signup-wrapper > p a {
     color: #d7a8f0;
 }
 
-html[data-theme="dark"] #error-message {
+html[data-theme="dark"] .signup-form .field-error {
     color: #ff8a80;
 }
 

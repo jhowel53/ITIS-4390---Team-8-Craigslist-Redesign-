@@ -3,7 +3,6 @@ const firstname_input = document.getElementById('firstname-input');
 const email_input = document.getElementById('email-input');
 const password_input = document.getElementById('password-input');
 const confirm_password_input = document.getElementById('confirm-password-input');
-const error_message = document.getElementById('error-message');
 const emailPattern = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 
 // Helper function used by the input and submit event handlers
@@ -65,18 +64,21 @@ function updateInputValidation(input, isSubmitting = false) {
         (isSubmitting || confirm_password_input.value !== '') &&
         confirm_password_input.value !== password_input.value
 
+    const errorElement = input.parentElement.querySelector('.field-error')
+    errorElement.textContent = error
+    input.setAttribute('aria-invalid', String(Boolean(error)))
+
     // Add or remove the red error styling based on the validation result
     input.parentElement.classList.toggle('incorrect', Boolean(error) || passwordsDoNotMatch)
     return error
 }
 
-// On submit, show validation errors/prevent submission and redirect to account.html after successful validation.
+// On submit, show inline validation errors/prevent submission and redirect after success.
 form.addEventListener('submit', (e) => {
     const errors = allInputs.map(input => updateInputValidation(input, true)).filter(Boolean)
 
     if (errors.length > 0) {
         e.preventDefault()
-        error_message.innerText = errors.join('. ')
     } else {
         e.preventDefault()
         sessionStorage.setItem(
@@ -100,7 +102,6 @@ allInputs.forEach(input => {
         const inputsToValidate = input === password_input
             ? [password_input, confirm_password_input].filter(Boolean)
             : [input]
-        const errors = inputsToValidate.map(field => updateInputValidation(field)).filter(Boolean)
-        error_message.innerText = errors.join('. ')
+        inputsToValidate.forEach(field => updateInputValidation(field))
     })
 })
