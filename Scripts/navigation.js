@@ -1,6 +1,71 @@
+const THEME_STORAGE_KEY = "craigslist-theme";
+
+function getStartingTheme() {
+    const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+
+    if (savedTheme === "dark" || savedTheme === "light") {
+        return savedTheme;
+    }
+
+    if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
+        return "dark";
+    }
+
+    return "light";
+}
+
+function setTheme(theme, saveTheme = true) {
+    document.documentElement.setAttribute("data-theme", theme);
+    document.documentElement.style.colorScheme = theme;
+
+    if (saveTheme) {
+        localStorage.setItem(THEME_STORAGE_KEY, theme);
+    }
+
+    syncThemeToggle();
+}
+
+function syncThemeToggle() {
+    const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+    const toggle = document.getElementById("check");
+    const status = document.getElementById("themeStatus");
+    const toggleLabel = document.querySelector('label[for="check"]');
+
+    if (toggle) {
+        toggle.checked = isDark;
+        toggle.setAttribute(
+            "aria-label",
+            isDark ? "Dark mode on. Switch to light mode" : "Light mode on. Switch to dark mode"
+        );
+    }
+
+    if (status) {
+        status.textContent = isDark ? "Dark" : "Light";
+    }
+
+    if (toggleLabel) {
+        toggleLabel.title = isDark ? "Switch to light mode" : "Switch to dark mode";
+    }
+}
+
+// Apply saved theme when the page loads.
+setTheme(getStartingTheme(), false);
+
+// Handles the theme toggle after the header is dynamically loaded.
+document.addEventListener("change", event => {
+    if (event.target instanceof HTMLInputElement && event.target.id === "check") {
+        setTheme(event.target.checked ? "dark" : "light");
+    }
+});
+
 function initHeaderEvents() {
     const menuButton = document.querySelector(".sidebar_button");
     const sidebar = document.getElementById("sidebar");
+    const headerTop = document.querySelector(".header_top");
+    const searchToggle = document.querySelector(".mobile-search-toggle");
+    const searchForm = document.querySelector(".search_bar");
+    const searchInput = document.getElementById("searchInput");
+    const searchCloseButton = document.querySelector(".search-close-button");
 
     if (!menuButton || !sidebar) return;
 
@@ -12,20 +77,71 @@ function initHeaderEvents() {
             isOpen ? "Close navigation" : "Open navigation"
         );
     };
+
     // Toggle sidebar when the hamburger menu is clicked.
     menuButton.addEventListener("click", () => {
         setMenuOpen(menuButton.getAttribute("aria-expanded") !== "true");
     });
-    //Close sidebar when a navigation link is clicked.
+
+    // Close sidebar when a navigation link is clicked.
     sidebar.addEventListener("click", event => {
         if (event.target instanceof HTMLAnchorElement) {
             setMenuOpen(false);
         }
     });
+
     // Close sidebar when the user clicks outside of hamburger menu.
     document.addEventListener("click", event => {
-        if (!sidebar.contains(event.target) && !menuButton.contains(event.target)) {
+        const isSearchInteraction = searchToggle?.contains(event.target) ||
+            searchForm?.contains(event.target);
+
+        if (
+            !sidebar.contains(event.target) &&
+            !menuButton.contains(event.target) &&
+            !isSearchInteraction
+        ) {
             setMenuOpen(false);
+        }
+    });
+
+    if (!headerTop || !searchToggle || !searchForm || !searchInput || !searchCloseButton) {
+        return;
+    }
+
+    const setSearchOpen = isOpen => {
+        headerTop.classList.toggle("is-search-open", isOpen);
+        searchToggle.setAttribute("aria-expanded", String(isOpen));
+        searchToggle.setAttribute("aria-label", isOpen ? "Close search" : "Open search");
+
+        if (isOpen) {
+            searchInput.focus();
+        } else {
+            searchInput.value = "";
+            triggerSearch();
+            searchToggle.focus();
+        }
+    };
+
+    searchToggle.addEventListener("click", () => {
+        setSearchOpen(true);
+    });
+
+    searchCloseButton.addEventListener("click", () => {
+        setSearchOpen(false);
+    });
+
+    searchInput.addEventListener("keydown", event => {
+        if (event.key === "Escape") {
+            setSearchOpen(false);
+        }
+    });
+
+    document.addEventListener("click", event => {
+        if (
+            headerTop.classList.contains("is-search-open") &&
+            !headerTop.contains(event.target)
+        ) {
+            setSearchOpen(false);
         }
     });
 }
@@ -48,12 +164,14 @@ document.addEventListener("DOMContentLoaded", function () {
                     link.setAttribute('aria-current', 'page');
                 }
             });
-            
-            // Optional: Re-initialize any interactive header listeners 
-            // (like hamburger sidebar toggle) if they depend on DOM elements loaded dynamically.
+
+            // Re-initialize header interactions after header loads.
             if (typeof initHeaderEvents === 'function') {
                 initHeaderEvents();
             }
+
+            // Make the toggle match the current saved theme.
+            syncThemeToggle();
         })
         .catch(error => console.error('Error loading header:', error));
 });
@@ -125,6 +243,7 @@ document.addEventListener('click', event => {
     if (!link) return;
 
     const href = link.getAttribute('href');
+
     if (
         !href ||
         href === '#' ||
@@ -147,6 +266,7 @@ document.addEventListener('click', event => {
         window.location.href = href;
     }, 450);
 });
+
 function triggerSearch() {
     const input = document.getElementById("searchInput");
     const suggestions = document.getElementById("searchSuggestions");
@@ -174,6 +294,7 @@ function triggerSearch() {
         items.forEach(item => {
             item.hidden = false;
         });
+
         suggestions.replaceChildren();
         suggestions.hidden = true;
         input.setAttribute("aria-expanded", "false");
@@ -202,10 +323,14 @@ function triggerSearch() {
         option.className = "search_suggestion";
         button.type = "button";
         button.textContent = text.length > 100 ? `${text.slice(0, 97)}...` : text;
-        button.addEventListener("click", () => {
+
+        button.addEventListener("click", event => {
+            event.stopPropagation();
             input.value = text;
             triggerSearch();
+            input.focus();
         });
+
         option.append(button);
         suggestions.append(option);
     });
@@ -223,5 +348,6 @@ function triggerSearch() {
         emptyState.setAttribute("role", "status");
         content.append(emptyState);
     }
+
     emptyState.textContent = "No results found.";
 }
