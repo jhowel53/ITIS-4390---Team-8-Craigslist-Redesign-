@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,17 +6,242 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home - Craigslist Redesign</title>
     <link rel="stylesheet" href="../Style/style.css">
+
+    <style>
+        .home-main {
+            --home-surface: #fff;
+            --home-text: #242128;
+            --home-muted: #514a56;
+            --home-primary: #602583;
+            --home-outline: #d7c9df;
+            --home-icon: #f0e4f7;
+
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 72px 24px 48px;
+            color: var(--home-text);
+        }
+
+        /* Dark mode */
+        html[data-theme="dark"] .home-main {
+            --home-surface: #29252f;
+            --home-text: #f5eff8;
+            --home-muted: #ddd3e4;
+            --home-primary: #e5b6ff;
+            --home-outline: #82738e;
+            --home-icon: #493357;
+        }
+
+        /* Homepage introduction */
+        .home-intro {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .home-intro h1 {
+            font-size: 32px;
+            line-height: 40px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .home-intro p {
+            font-size: 16px;
+            line-height: 24px;
+        }
+
+        /* Main task cards */
+        .home-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 24px;
+        }
+
+        .home-task {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            padding: 24px;
+            min-height: 240px;
+            border: 1px solid var(--home-outline);
+            border-radius: 12px;
+            background: var(--home-surface);
+            color: var(--home-text);
+            text-decoration: none;
+            box-shadow: 0 2px 6px #00000012;
+        }
+
+        .home-task[hidden] {
+            display: none;
+        }
+
+        .home-task:hover {
+            border-color: var(--home-primary);
+            box-shadow: 0 4px 12px #00000026;
+        }
+
+        .home-task:focus-visible {
+            outline: 3px solid var(--home-primary);
+            outline-offset: 4px;
+        }
+
+        .home-task h2 {
+            font-size: 22px;
+            line-height: 28px;
+            font-weight: 600;
+        }
+
+        .home-task p {
+            color: var(--home-muted);
+            font-size: 16px;
+            line-height: 24px;
+        }
+
+        .home-task-action {
+            margin-top: auto;
+            color: var(--home-primary);
+            font-size: 14px;
+            line-height: 20px;
+            font-weight: 700;
+        }
+
+        /* Card icons */
+        .home-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: var(--home-icon);
+            color: var(--home-primary);
+            display: grid;
+            place-items: center;
+        }
+
+        .home-icon svg {
+            width: 26px;
+            height: 26px;
+        }
+
+        /* Smaller screens */
+        @media (max-width: 760px) {
+            .home-main {
+                padding: 32px 20px;
+            }
+
+            .home-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .home-task {
+                min-height: 0;
+            }
+        }
+    </style>
 </head>
-    
+
 <body>
+
     <div id="header-placeholder"></div>
 
-    <main class="content">
-        <h1>Welcome to Craigslist</h1>
-        <p>Main page content here.</p>
+    <main class="content home-main">
+
+        <div class="home-intro">
+            <h1>Welcome to Craigslist</h1>
+            <p>
+                Find items, explore job opportunities,
+                and connect with your community.
+            </p>
+        </div>
+
+        <div class="home-grid" aria-label="Main tasks">
+
+            <!-- Browse Items -->
+            <a class="home-task" data-searchable href="search.html">
+
+                <span class="home-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="1.8"
+                         stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <path d="M4 7h16l-1 14H5L4 7Z"/>
+                        <path d="M8 8V6a4 4 0 0 1 8 0v2"/>
+                    </svg>
+                </span>
+
+                <h2>Browse Items</h2>
+
+                <p>
+                    Find clothing, electronics, furniture
+                    and other local listings.
+                </p>
+
+                <span class="home-task-action">
+                    Browse marketplace &rarr;
+                </span>
+
+            </a>
+
+            <!-- Find Jobs -->
+            <a class="home-task" data-searchable href="hiring.html">
+
+                <span class="home-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="1.8"
+                         stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <rect x="3" y="7" width="18" height="14" rx="2"/>
+                        <path d="M8 7V4h8v3M3 13h18"/>
+                    </svg>
+                </span>
+
+                <h2>Find Jobs</h2>
+
+                <p>
+                    Explore job openings and hiring opportunities.
+                </p>
+
+                <span class="home-task-action">
+                    View hiring posts &rarr;
+                </span>
+
+            </a>
+
+            <!-- Discussion Forum -->
+            <a class="home-task" data-searchable href="discussions.html">
+
+                <span class="home-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="1.8"
+                         stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <path d="M4 4h16v12H9l-5 5V4Z"/>
+                        <path d="M8 8h8M8 12h5"/>
+                    </svg>
+                </span>
+
+                <h2>Discussion Forum</h2>
+
+                <p>
+                    Explore community conversations and local topics.
+                </p>
+
+                <span class="home-task-action">
+                    Browse discussions &rarr;
+                </span>
+
+            </a>
+
+        </div>
+
     </main>
-    
+
     <script src="../Scripts/navigation.js" defer></script>
-    <script src="../Scripts/load-header.js" defer></script>
+
 </body>
 </html>
