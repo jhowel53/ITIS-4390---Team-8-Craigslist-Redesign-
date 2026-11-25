@@ -12,13 +12,58 @@
 
     <main class="content">
         <section class="hiring-posts" aria-labelledby="hiring-posts-title">
-            <header class="hiring-posts__header">
-                <h1 id="hiring-posts-title">Local Services</h1>
-                <p>Find trusted neighbors offering help in your community.</p>
+            <header class="hiring-posts__header hiring-posts__header--create">
+                <div>
+                    <h1 id="hiring-posts-title">Local Services</h1>
+                    <p>Find trusted neighbors offering help in your community.</p>
+                </div>
+                <button type="button" class="listing-create-button" id="createListingPostButton">Create Post</button>
             </header>
 
-            <div class="hiring-posts__grid">
-                <article class="hiring-card">
+            <section class="market-filters" aria-label="Listing filters">
+                <div class="filter-heading">
+                    <h2>Filters</h2>
+                    <button type="button" id="clearFilters">Clear Filters</button>
+                </div>
+
+                <div class="filter-controls">
+                    <div class="filter-group">
+                        <label for="categoryFilter">Service Type</label>
+                        <select id="categoryFilter">
+                            <option value="all">All Services</option>
+                            <option value="cleaning">Cleaning</option>
+                            <option value="yard">Yard and Garden</option>
+                            <option value="delivery">Delivery</option>
+                            <option value="repairs">Home Repairs</option>
+                            <option value="pet">Pet Care</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="neighborhoodFilter">Neighborhood</label>
+                        <select id="neighborhoodFilter">
+                            <option value="all">Any Neighborhood</option>
+                            <option value="South End">South End</option>
+                            <option value="University City">University City</option>
+                            <option value="NoDa">NoDa</option>
+                            <option value="Plaza Midwood">Plaza Midwood</option>
+                            <option value="Elizabeth">Elizabeth</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="locationFilter">Location</label>
+                        <select id="locationFilter">
+                            <option value="all">All Locations</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="active-filters" id="activeFilters"></div>
+                <p id="filterResults" role="status" aria-live="polite">5 listings available</p>
+            </section>
+
+            <div class="hiring-posts__grid listing-card-grid">
+                <article class="hiring-card" data-category="cleaning" data-neighborhood="South End">
                     <img
                         class="hiring-card__image"
                         src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=1200&q=85"
@@ -29,13 +74,13 @@
                         <p>Friendly, detail-oriented cleaner available for weekly or one-time home cleaning. Supplies included, and references are available on request.</p>
                         <footer class="hiring-card__meta">
                             <span class="hiring-card__username">Maya R.</span>
-                            <span>South End</span>
+                            <span class="hiring-card__location">Charlotte, NC</span>
                             <time datetime="2026-11-14">Nov 14, 2026</time>
                         </footer>
                     </div>
                 </article>
 
-                <article class="hiring-card">
+                <article class="hiring-card" data-category="yard" data-neighborhood="University City">
                     <img
                         class="hiring-card__image"
                         src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=1200&q=85"
@@ -46,13 +91,13 @@
                         <p>Offering lawn mowing, seasonal cleanup, weeding, and garden care. Flexible scheduling for small and medium-sized yards.</p>
                         <footer class="hiring-card__meta">
                             <span class="hiring-card__username">Jordan T.</span>
-                            <span>University City</span>
+                            <span class="hiring-card__location">Charlotte, NC</span>
                             <time datetime="2026-11-13">Nov 13, 2026</time>
                         </footer>
                     </div>
                 </article>
 
-                <article class="hiring-card">
+                <article class="hiring-card" data-category="delivery" data-neighborhood="NoDa">
                     <img
                         class="hiring-card__image"
                         src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSBMdzcELfhimeLz9W8tKiKzR6-kq4MyzHU1gYbMLLZfA&s=10"
@@ -63,13 +108,13 @@
                         <p>Need a small item picked up or dropped off? I provide prompt local deliveries and can coordinate a convenient pickup time.</p>
                         <footer class="hiring-card__meta">
                             <span class="hiring-card__username">Chris L.</span>
-                            <span>NoDa</span>
+                            <span class="hiring-card__location">Charlotte, NC</span>
                             <time datetime="2026-11-12">Nov 12, 2026</time>
                         </footer>
                     </div>
                 </article>
 
-                <article class="hiring-card">
+                <article class="hiring-card" data-category="repairs" data-neighborhood="Plaza Midwood">
                     <img
                         class="hiring-card__image"
                         src="https://images.unsplash.com/photo-1581244277943-fe4a9c777189?auto=format&fit=crop&w=1200&q=85"
@@ -80,13 +125,13 @@
                         <p>Available for furniture assembly, hanging shelves, minor fixes, and other small jobs. Send a description to check availability.</p>
                         <footer class="hiring-card__meta">
                             <span class="hiring-card__username">Alex P.</span>
-                            <span>Plaza Midwood</span>
+                            <span class="hiring-card__location">Charlotte, NC</span>
                             <time datetime="2026-11-11">Nov 11, 2026</time>
                         </footer>
                     </div>
                 </article>
 
-                <article class="hiring-card">
+                <article class="hiring-card" data-category="pet" data-neighborhood="Elizabeth">
                     <img
                         class="hiring-card__image"
                         src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=1200&q=85"
@@ -97,7 +142,7 @@
                         <p>Experienced pet sitter offering neighborhood walks, drop-in visits, and attentive care while you are away.</p>
                         <footer class="hiring-card__meta">
                             <span class="hiring-card__username">Sam K.</span>
-                            <span>Elizabeth</span>
+                            <span class="hiring-card__location">Charlotte, NC</span>
                             <time datetime="2026-11-10">Nov 10, 2026</time>
                         </footer>
                     </div>
@@ -107,9 +152,205 @@
     </main>
 
     <div id="footer-placeholder"></div>
-    
+
+    <dialog class="listing-create-dialog" id="createListingDialog" aria-labelledby="createListingTitle">
+        <form class="listing-create-form" id="createListingForm" data-post-type="hiring">
+            <h2 id="createListingTitle">Create a Service Post</h2>
+            <label>
+                Title
+                <input type="text" name="title" required>
+            </label>
+            <label>
+                Service Type
+                <select name="category" required>
+                    <option value="cleaning">Cleaning</option>
+                    <option value="yard">Yard and Garden</option>
+                    <option value="delivery">Delivery</option>
+                    <option value="repairs">Home Repairs</option>
+                    <option value="pet">Pet Care</option>
+                </select>
+            </label>
+            <label>
+                Neighborhood filter
+                <select name="neighborhood" required>
+                    <option value="South End">South End</option>
+                    <option value="University City">University City</option>
+                    <option value="NoDa">NoDa</option>
+                    <option value="Plaza Midwood">Plaza Midwood</option>
+                    <option value="Elizabeth">Elizabeth</option>
+                </select>
+            </label>
+            <label>
+                City and State
+                <input type="text" name="location" value="Charlotte, NC" pattern="[^,]+,\s*[A-Za-z]{2}" title="Enter a city and two-letter state code, such as Charlotte, NC." required>
+            </label>
+            <label>
+                Image (optional)
+                <input type="file" name="image" accept="image/*">
+            </label>
+            <label>
+                Details
+                <textarea name="details" rows="4" required></textarea>
+            </label>
+            <p class="listing-create-status" id="createListingStatus" role="status" aria-live="polite"></p>
+            <div class="listing-create-actions">
+                <button type="button" class="listing-create-cancel" id="cancelCreateListing">Cancel</button>
+                <button type="submit" class="listing-create-button">Post</button>
+            </div>
+        </form>
+    </dialog>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const categoryFilter = document.getElementById("categoryFilter");
+            const neighborhoodFilter = document.getElementById("neighborhoodFilter");
+            const locationFilter = document.getElementById("locationFilter");
+            const clearFilters = document.getElementById("clearFilters");
+            const filterResults = document.getElementById("filterResults");
+            const activeFilters = document.getElementById("activeFilters");
+            let cards = Array.from(document.querySelectorAll(".hiring-card"));
+
+            function getCardLocation(card) {
+                const location =
+                    card.dataset.location ||
+                    card.querySelector(".hiring-card__location")?.textContent.trim() ||
+                    "";
+                card.dataset.location = location;
+                return location;
+            }
+
+            function updateLocationOptions() {
+                const selectedLocation = locationFilter.value;
+                const locations = Array.from(
+                    new Set(cards.map(getCardLocation).filter(Boolean))
+                ).sort((first, second) => first.localeCompare(second));
+
+                locationFilter.replaceChildren();
+                const allLocationsOption = document.createElement("option");
+                allLocationsOption.value = "all";
+                allLocationsOption.textContent = "All Locations";
+                locationFilter.appendChild(allLocationsOption);
+
+                locations.forEach(location => {
+                    const option = document.createElement("option");
+                    option.value = location;
+                    option.textContent = location;
+                    locationFilter.appendChild(option);
+                });
+
+                locationFilter.value = locations.includes(selectedLocation)
+                    ? selectedLocation
+                    : "all";
+            }
+
+            updateLocationOptions();
+
+            function updateActiveFilters() {
+                activeFilters.replaceChildren();
+
+                function createChip(select, label) {
+                    if (select.value === "all") {
+                        return;
+                    }
+
+                    const chip = document.createElement("button");
+                    chip.type = "button";
+                    chip.className = "filter-chip";
+                    chip.textContent =
+                        label + ": " + select.options[select.selectedIndex].text + " ×";
+                    chip.setAttribute("aria-label", "Remove " + label + " filter");
+                    chip.addEventListener("click", () => {
+                        select.value = "all";
+                        applyFilters();
+                        select.focus();
+                    });
+
+                    activeFilters.appendChild(chip);
+                }
+
+                createChip(categoryFilter, "Service");
+                createChip(neighborhoodFilter, "Neighborhood");
+                createChip(locationFilter, "Location");
+            }
+
+            function applyFilters() {
+                let visibleCount = 0;
+
+                cards.forEach(card => {
+                    const categoryMatch =
+                        categoryFilter.value === "all" ||
+                        card.dataset.category === categoryFilter.value;
+                    const neighborhoodMatch =
+                        neighborhoodFilter.value === "all" ||
+                        card.dataset.neighborhood === neighborhoodFilter.value;
+                    const locationMatch =
+                        locationFilter.value === "all" ||
+                        card.dataset.location === locationFilter.value;
+                    const matches =
+                        categoryMatch && neighborhoodMatch && locationMatch;
+
+                    card.classList.toggle("filtered-out", !matches);
+
+                    if (matches && !card.hidden && getComputedStyle(card).display !== "none") {
+                        visibleCount++;
+                    }
+                });
+
+                categoryFilter.classList.toggle("active-filter", categoryFilter.value !== "all");
+                neighborhoodFilter.classList.toggle("active-filter", neighborhoodFilter.value !== "all");
+                locationFilter.classList.toggle("active-filter", locationFilter.value !== "all");
+                clearFilters.disabled =
+                    categoryFilter.value === "all" &&
+                    neighborhoodFilter.value === "all" &&
+                    locationFilter.value === "all";
+
+                filterResults.textContent =
+                    visibleCount === 0
+                        ? "No matching listings found. Try changing your filters."
+                        : visibleCount + (visibleCount === 1 ? " listing available" : " listings available");
+
+                updateActiveFilters();
+            }
+
+            categoryFilter.addEventListener("change", applyFilters);
+            neighborhoodFilter.addEventListener("change", applyFilters);
+            locationFilter.addEventListener("change", applyFilters);
+
+            clearFilters.addEventListener("click", () => {
+                categoryFilter.value = "all";
+                neighborhoodFilter.value = "all";
+                locationFilter.value = "all";
+                applyFilters();
+                categoryFilter.focus();
+            });
+
+            const observer = new MutationObserver(applyFilters);
+            window.registerListingCard = card => {
+                cards.push(card);
+                getCardLocation(card);
+                updateLocationOptions();
+                observer.observe(card, {
+                    attributes: true,
+                    attributeFilter: ["hidden", "style"]
+                });
+                applyFilters();
+            };
+
+            cards.forEach(card => {
+                observer.observe(card, {
+                    attributes: true,
+                    attributeFilter: ["hidden", "style"]
+                });
+            });
+
+            applyFilters();
+        });
+    </script>
     <script src="../Scripts/navigation.js" defer></script>
     <script src="../Scripts/load-header.js" defer></script>
     <script src="../Scripts/saved-items.js" defer></script>
+    <script src="../Scripts/account-store.js" defer></script>
+    <script src="../Scripts/contact-seller.js" defer></script>
+    <script src="../Scripts/create-listing-post.js" defer></script>
 </body>
 </html>

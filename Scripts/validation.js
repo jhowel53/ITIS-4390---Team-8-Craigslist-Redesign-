@@ -1,3 +1,4 @@
+// Checks signup and login fields, then creates or signs into an account.
 const form = document.getElementById('form');
 const firstname_input = document.getElementById('firstname-input');
 const email_input = document.getElementById('email-input');
@@ -74,23 +75,47 @@ function updateInputValidation(input, isSubmitting = false) {
 }
 
 // On submit, show inline validation errors/prevent submission and redirect after success.
-form.addEventListener('submit', (e) => {
+form.addEventListener('submit', async (e) => {
+    e.preventDefault()
     const errors = allInputs.map(input => updateInputValidation(input, true)).filter(Boolean)
 
     if (errors.length > 0) {
-        e.preventDefault()
-    } else {
-        e.preventDefault()
-        sessionStorage.setItem(
-            'accountSuccessMessage',
-            firstname_input ? 'Account registered successfully!' : 'Login successful! Explore your account.'
-        )
-        showPageLoader()
-
-        window.setTimeout(() => {
-            window.location.href = 'account.html'
-        }, 450)
+        return
     }
+
+    // Let the account store save a new profile or verify the login.
+    try {
+        if (firstname_input) {
+            await window.CraigslistAccount.register(
+                firstname_input.value,
+                email_input.value,
+                password_input.value
+            )
+        } else {
+            await window.CraigslistAccount.signIn(
+                email_input.value,
+                password_input.value
+            )
+        }
+    } catch (error) {
+        const input = error.field === 'password' ? password_input : email_input
+        const errorElement = input.parentElement.querySelector('.field-error')
+        errorElement.textContent = error.message
+        input.setAttribute('aria-invalid', 'true')
+        input.parentElement.classList.add('incorrect')
+        console.error('Unable to complete account sign in.', error)
+        return
+    }
+
+    sessionStorage.setItem(
+        'accountSuccessMessage',
+        firstname_input ? 'Account registered successfully!' : 'Login successful! Explore your account.'
+    )
+    showPageLoader()
+
+    window.setTimeout(() => {
+        window.location.href = 'account.html'
+    }, 450)
 })
 
 // Get inputs, Include only fields present on Login when on Login page (signup has extra fields)

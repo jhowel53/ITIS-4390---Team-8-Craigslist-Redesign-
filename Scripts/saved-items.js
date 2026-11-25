@@ -1,3 +1,4 @@
+// Handles saving listings and rendering the Saved Posts page.
 const SAVED_STORAGE_KEY = "craigslist-saved-items";
 const CARD_SELECTOR = ".hiring-card, .card, .listing, .post, .item";
 
@@ -24,6 +25,7 @@ function getCardId(card, index) {
     return id;
 }
 
+// Keep just the useful listing details when a card is saved.
 function serializeCard(card, id) {
     const title = card.querySelector("h1, h2, h3, h4")?.textContent?.trim() || "Untitled Listing";
     const img = card.querySelector("img");
@@ -71,6 +73,46 @@ function toggleSavedCard(card, id, button) {
     }
 }
 
+function addLearnMoreButton(card) {
+    const description = card.querySelector(".hiring-card__body > p");
+    if (!description || card.querySelector(".card-learn-more")) return;
+
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "card-learn-more";
+    button.textContent = "Learn more";
+    button.addEventListener("click", () => {
+        let dialog = document.getElementById("cardDetailsDialog");
+
+        if (!dialog) {
+            dialog = document.createElement("dialog");
+            dialog.id = "cardDetailsDialog";
+            dialog.className = "card-details-dialog";
+
+            const heading = document.createElement("h2");
+            heading.id = "cardDetailsTitle";
+            const fullDescription = document.createElement("p");
+            fullDescription.id = "cardDetailsDescription";
+            const closeButton = document.createElement("button");
+            closeButton.type = "button";
+            closeButton.className = "card-details-close";
+            closeButton.textContent = "Close";
+            closeButton.addEventListener("click", () => dialog.close());
+
+            dialog.append(heading, fullDescription, closeButton);
+            document.body.appendChild(dialog);
+        }
+
+        dialog.querySelector("#cardDetailsTitle").textContent =
+            card.querySelector("h1, h2, h3, h4")?.textContent?.trim() || "Details";
+        dialog.querySelector("#cardDetailsDescription").textContent =
+            description.textContent.trim();
+        dialog.showModal();
+    });
+
+    description.insertAdjacentElement("afterend", button);
+}
+
 function initSaveButtons() {
     const container = document.getElementById("saved-items-container");
     if (container) return; // Handled by saved.html renderer
@@ -80,23 +122,32 @@ function initSaveButtons() {
     const allMatching = Array.from(main.querySelectorAll(CARD_SELECTOR));
     const cards = allMatching.filter(el => !el.parentElement?.closest(CARD_SELECTOR));
 
+    // Only wire up top-level cards, so nested cards don't get duplicate controls.
     cards.forEach((card, index) => {
-        if (card.querySelector(".save-item-btn")) return;
+        addLearnMoreButton(card);
 
+        const existingButton = card.querySelector(".save-item-btn");
         const id = getCardId(card, index);
-        const button = document.createElement("button");
-        button.type = "button";
-        button.className = "save-item-btn";
+        const button = existingButton || document.createElement("button");
+        if (!existingButton) {
+            button.type = "button";
+            button.className = "save-item-btn";
+        }
         updateSaveButtonUI(button, savedIds.has(id));
 
-        button.addEventListener("click", event => {
-            event.preventDefault();
-            event.stopPropagation();
-            toggleSavedCard(card, id, button);
-        });
+        if (button.dataset.saveBound !== "true") {
+            button.dataset.saveBound = "true";
+            button.addEventListener("click", event => {
+                event.preventDefault();
+                event.stopPropagation();
+                toggleSavedCard(card, id, button);
+            });
+        }
 
-        const body = card.querySelector(".hiring-card__body, .card__body") || card;
-        body.appendChild(button);
+        if (!existingButton) {
+            const body = card.querySelector(".hiring-card__body, .card__body") || card;
+            body.appendChild(button);
+        }
     });
 }
 
@@ -115,6 +166,7 @@ function renderSavedPage() {
 
     if (emptyState) emptyState.hidden = true;
 
+    // Recreate saved cards from the browser's stored listing snapshots.
     items.forEach(item => {
         const article = document.createElement("article");
         article.className = "hiring-card saved-card";
@@ -148,10 +200,16 @@ function renderSavedPage() {
             body.appendChild(desc);
         }
 
+        article.appendChild(body);
+        addLearnMoreButton(article);
+
         if (item.meta) {
             const meta = document.createElement("div");
             meta.className = "hiring-card__meta";
-            meta.textContent = item.meta;
+            meta.textContent = item.meta.replace(
+                /\b(?:South End|University City|NoDa|Plaza Midwood|Elizabeth)\b/g,
+                "Charlotte, NC"
+            );
             body.appendChild(meta);
         }
 
@@ -169,7 +227,6 @@ function renderSavedPage() {
         });
 
         body.appendChild(removeBtn);
-        article.appendChild(body);
         container.appendChild(article);
     });
 }

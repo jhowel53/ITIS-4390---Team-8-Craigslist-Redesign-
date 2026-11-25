@@ -1,3 +1,4 @@
+// Sets up the shared header, page navigation, theme, and search.
 const THEME_STORAGE_KEY = "craigslist-theme";
 
 function getStartingTheme() {
@@ -146,6 +147,7 @@ function initHeaderEvents() {
     });
 }
 
+// Load the shared header and point signed-in visitors to their account.
 document.addEventListener("DOMContentLoaded", function () {
     fetch('../Components/header.html')
         .then(response => {
@@ -156,6 +158,13 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .then(data => {
             document.getElementById('header-placeholder').innerHTML = data;
+
+            const accountLink = document.querySelector('.account-link');
+            if (sessionStorage.getItem('craigslist-authenticated') === 'true') {
+                accountLink.href = 'account.html';
+                accountLink.setAttribute('aria-label', 'Account');
+                accountLink.querySelector('span').textContent = 'Account';
+            }
 
             // Highlight the current page link in the navigation header.
             const currentPath = window.location.pathname;
@@ -286,6 +295,21 @@ function triggerSearch() {
         : Array.from(content.children).filter(item =>
             !item.matches("h1, h2, h3, h4, h5, h6, [data-search-empty]")
         );
+    // Ignore card metadata so search stays focused on the title and description.
+    const getSearchFields = item => {
+        const title = item.querySelector(
+            "[data-search-title], h1, h2, h3, h4, h5, h6"
+        )?.textContent.trim() || "";
+        let description = item.querySelector(
+            "[data-search-description], p"
+        )?.textContent.trim() || "";
+
+        if (item.hasAttribute("data-price")) {
+            description = description.replace(/^\s*\$[\d,]+(?:\.\d{1,2})?\s*·\s*/, "");
+        }
+
+        return { title, description, text: `${title} ${description}`.trim() };
+    };
 
     let emptyState = content.querySelector("[data-search-empty]");
 
@@ -303,7 +327,7 @@ function triggerSearch() {
     }
 
     const matches = items.filter(item =>
-        item.textContent.toLocaleLowerCase().includes(query)
+        getSearchFields(item).text.toLocaleLowerCase().includes(query)
     );
 
     items.forEach(item => {
@@ -316,7 +340,8 @@ function triggerSearch() {
 
     // Show up to eight matching content snippets as live suggestions.
     matches.slice(0, 8).forEach(item => {
-        const text = item.textContent.trim().replace(/\s+/g, " ");
+        const fields = getSearchFields(item);
+        const text = fields.text.replace(/\s+/g, " ");
         const option = document.createElement("li");
         const button = document.createElement("button");
 
@@ -326,7 +351,7 @@ function triggerSearch() {
 
         button.addEventListener("click", event => {
             event.stopPropagation();
-            input.value = text;
+            input.value = fields.title || text;
             triggerSearch();
             input.focus();
         });

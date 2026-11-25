@@ -5,7 +5,358 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Discussion Forum</title>
     <link rel="stylesheet" href="../Style/style.css">
-</head>
+    <style>
+        .discussion-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+
+        .discussion-card {
+            display: grid;
+            grid-template-columns: 280px minmax(0, 1fr);
+            align-items: stretch;
+            height: 260px;
+            border: 1px solid rgb(82 79 79 / 14%);
+            border-radius: 16px;
+            background: #fff;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgb(82 79 79 / 10%);
+            transition: transform 180ms ease, box-shadow 180ms ease;
+        }
+
+        .discussion-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgb(82 79 79 / 16%);
+        }
+
+        .discussion-card .hiring-card__image {
+            width: 100%;
+            height: 100%;
+            min-height: 220px;
+        }
+
+        .discussion-card div.hiring-card__image {
+            background:
+                linear-gradient(135deg, rgb(126 53 168 / 45%), rgb(221 208 226 / 80%)),
+                #ddd0e2;
+        }
+
+        .discussion-card .hiring-card__body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .discussion-card .hiring-card__body > p {
+            min-height: 0;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+        }
+
+        .discussion-card .card-learn-more {
+            margin-top: 6px;
+        }
+
+        .discussion-page-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 24px;
+        }
+
+        .discussion-create-button {
+            flex: 0 0 auto;
+            margin-top: 4px;
+            border: 0;
+            border-radius: 24px;
+            background: #602583;
+            color: #fff;
+            padding: 12px 18px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .discussion-create-button:hover {
+            background: #7e35a8;
+        }
+
+        .discussion-meta {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 10px;
+            color: #602583;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .discussion-meta .hiring-card__username,
+        .discussion-meta time,
+        .discussion-meta span {
+            color: inherit;
+        }
+
+        .discussion-actions {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+            margin-top: auto;
+            padding-top: 8px;
+            border-top: 1px solid #e6e0e9;
+        }
+
+        .reaction-button,
+        .reply-button,
+        .discussion-card .save-item-btn {
+            min-height: 30px;
+            border: 1px solid #d7c9df;
+            border-radius: 20px;
+            background: #fff;
+            color: #514a56;
+            padding: 5px 10px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .reaction-button.is-active {
+            border-color: #602583;
+            background: #f0e4f7;
+            color: #602583;
+        }
+
+        .reply-button:hover,
+        .reply-button:focus-visible {
+            border-color: #602583;
+            background: #f0e4f7;
+            color: #602583;
+        }
+
+        .discussion-card .save-item-btn {
+            margin-left: auto;
+            margin-top: 0;
+        }
+
+        .comments-dialog {
+            width: min(560px, calc(100vw - 32px));
+            max-height: min(80vh, 640px);
+            overflow: auto;
+            margin: auto;
+            border: 1px solid #d7c9df;
+            border-radius: 16px;
+            background: #fff;
+            color: #242128;
+            padding: 24px;
+        }
+
+        .comments-dialog::backdrop {
+            background: rgb(36 33 40 / 55%);
+        }
+
+        .comments-dialog h2 {
+            margin-bottom: 6px;
+        }
+
+        .comments-post-title {
+            margin-bottom: 16px;
+            color: #514a56;
+        }
+
+        .discussion-comment-list {
+            display: grid;
+            gap: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 16px;
+        }
+
+        .discussion-empty-comments {
+            color: #514a56;
+            padding: 16px 8px;
+            text-align: center;
+        }
+
+        .discussion-comment {
+            border-radius: 10px;
+            background: #f6f1f8;
+            padding: 12px;
+        }
+
+        .discussion-comment__author {
+            margin-bottom: 4px;
+            color: #602583;
+            font-size: 0.875rem;
+            font-weight: 700;
+        }
+
+        .discussion-comment__text {
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+
+        .discussion-comment__date {
+            display: block;
+            margin-top: 8px;
+            color: #686168;
+            font-size: 0.75rem;
+        }
+
+        .discussion-comment-form {
+            display: grid;
+            gap: 10px;
+        }
+
+        .discussion-comment-form textarea {
+            width: 100%;
+            border: 1px solid #d7c9df;
+            border-radius: 8px;
+            padding: 10px 12px;
+            font: inherit;
+        }
+
+        .comments-dialog-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        .create-post-dialog {
+            width: min(520px, calc(100vw - 32px));
+            border: 1px solid #d7c9df;
+            border-radius: 16px;
+            padding: 24px;
+            color: #242128;
+        }
+
+        .create-post-dialog::backdrop {
+            background: rgb(36 33 40 / 55%);
+        }
+
+        .create-post-form {
+            display: grid;
+            gap: 14px;
+        }
+
+        .create-post-form label {
+            display: grid;
+            gap: 6px;
+            font-weight: 700;
+        }
+
+        .create-post-form input,
+        .create-post-form textarea,
+        .create-post-form input[type="file"] {
+            width: 100%;
+            border: 1px solid #d7c9df;
+            border-radius: 8px;
+            padding: 10px 12px;
+            font: inherit;
+        }
+
+        .create-post-form input[type="file"] {
+            cursor: pointer;
+        }
+
+        .dialog-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        @media (max-width: 700px) {
+            .discussion-page-header {
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            #createDiscussionPost {
+                margin-top: 0;
+                padding: 8px 12px;
+                font-size: 13px;
+                line-height: 1.2;
+                white-space: nowrap;
+            }
+
+            .discussion-card {
+                grid-template-columns: 1fr;
+                height: 440px;
+            }
+
+            .discussion-card .hiring-card__image {
+                height: 180px;
+                min-height: 0;
+            }
+
+            .discussion-card .hiring-card__body {
+                padding: 20px;
+            }
+        }
+
+        html[data-theme="dark"] .discussion-card {
+            border-color: #555;
+            box-shadow: 0 8px 24px rgb(0 0 0 / 24%);
+        }
+
+        html[data-theme="dark"] .discussion-meta {
+            color: #d6a5f2;
+        }
+
+        html[data-theme="dark"] .discussion-meta .hiring-card__username,
+        html[data-theme="dark"] .discussion-meta time,
+        html[data-theme="dark"] .discussion-meta span {
+            color: #d6a5f2;
+        }
+
+        html[data-theme="dark"] .discussion-actions,
+        html[data-theme="dark"] .create-post-dialog,
+        html[data-theme="dark"] .comments-dialog {
+            border-top-color: #555;
+        }
+
+        html[data-theme="dark"] .create-post-dialog {
+            background: #29252f;
+            color: #f5eff8;
+        }
+
+        html[data-theme="dark"] .reaction-button,
+        html[data-theme="dark"] .reply-button,
+        html[data-theme="dark"] .discussion-card .save-item-btn,
+        html[data-theme="dark"] .create-post-form input,
+        html[data-theme="dark"] .create-post-form textarea,
+        html[data-theme="dark"] .comments-dialog {
+            border-color: #82738e;
+            background: #29252f;
+            color: #f5eff8;
+        }
+
+        html[data-theme="dark"] .comments-post-title {
+            color: #ddd3e4;
+        }
+
+        html[data-theme="dark"] .discussion-comment {
+            background: #39313f;
+        }
+
+        html[data-theme="dark"] .discussion-comment__author {
+            color: #d6a5f2;
+        }
+
+        html[data-theme="dark"] .discussion-empty-comments,
+        html[data-theme="dark"] .discussion-comment__date {
+            color: #d0d0d0;
+        }
+
+        html[data-theme="dark"] .discussion-comment-form textarea {
+            border-color: #82738e;
+            background: #29252f;
+            color: #f5eff8;
+        }
+    </style>
 </head>
     
 <body>
@@ -13,93 +364,136 @@
 
     <main class="content">
         <section class="hiring-posts" aria-labelledby="hiring-posts-title">
-            <header class="hiring-posts__header">
-                <h1 id="hiring-posts-title">Community Discussions</h1>
-                <p>Connect with your neighbors and share experiences in your community.</p>
+            <header class="hiring-posts__header discussion-page-header">
+                <div>
+                    <h1 id="hiring-posts-title">Community Discussions</h1>
+                    <p>Connect with your neighbors and share experiences in your community.</p>
+                </div>
+                <button type="button" class="discussion-create-button" id="createDiscussionPost">Create Discussion</button>
             </header>
 
-            <div class="hiring-posts__grid">
-                <article class="hiring-card">
+            <div class="hiring-posts__grid discussion-grid">
+                <article class="hiring-card discussion-card" data-discussion-id="cleaning-recommendations">
                     <img
                         class="hiring-card__image"
                         src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSceBnsPg9U-Yj-9yhJJI4eWeYTVZOp7dt7x347lxjiFA&s=10"
                         alt="cleaning supplies"
                     >
                     <div class="hiring-card__body">
+                        <div class="discussion-meta">
+                            <span class="hiring-card__username">Maya R.</span>
+                            <span aria-hidden="true">·</span>
+                            <span>Charlotte, NC</span>
+                            <span aria-hidden="true">·</span>
+                            <time datetime="2026-11-14">Nov 14, 2026</time>
+                        </div>
                         <h2>Who do you recommend for home cleaning?</h2>
                         <p>I’m looking for a reliable cleaner for a one-bedroom apartment. Has anyone in the neighborhood found someone they’d recommend?</p>
-                        <footer class="hiring-card__meta">
-                            <span class="hiring-card__username">Maya R.</span>
-                            <span>South End</span>
-                            <time datetime="2026-11-14">Nov 14, 2026</time>
+                        <footer class="discussion-actions">
+                            <button type="button" class="reaction-button" aria-label="Like post" aria-pressed="false">👍 <span>12</span></button>
+                            <button type="button" class="reaction-button" aria-label="Dislike post" aria-pressed="false">👎 <span>1</span></button>
+                            <button type="button" class="reply-button">Reply <span>0</span></button>
+                            <button type="button" class="save-item-btn" aria-label="Save post" aria-pressed="false">Save</button>
                         </footer>
                     </div>
                 </article>
 
-                <article class="hiring-card">
+                <article class="hiring-card discussion-card" data-discussion-id="fall-garden">
                     <img
                         class="hiring-card__image"
                         src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVEZ9wiBXbeNI8HJ2DV71z9VlZWcfJClwoWW9eoxIPHD0johmUqQSZu_cb&s=10"
                         alt="Gardener tending green plants"
                     >
                     <div class="hiring-card__body">
+                        <div class="discussion-meta">
+                            <span class="hiring-card__username">Jordan T.</span>
+                            <span aria-hidden="true">·</span>
+                            <span>Charlotte, NC</span>
+                            <span aria-hidden="true">·</span>
+                            <time datetime="2026-11-13">Nov 13, 2026</time>
+                        </div>
                         <h2>What should I plant in a fall garden?</h2>
                         <p>I’m planning a small garden and would love suggestions for flowers or vegetables that do well in our area this time of year.</p>
-                        <footer class="hiring-card__meta">
-                            <span class="hiring-card__username">Jordan T.</span>
-                            <span>University City</span>
-                            <time datetime="2026-11-13">Nov 13, 2026</time>
+                        <footer class="discussion-actions">
+                            <button type="button" class="reaction-button" aria-label="Like post" aria-pressed="false">👍 <span>8</span></button>
+                            <button type="button" class="reaction-button" aria-label="Dislike post" aria-pressed="false">👎 <span>0</span></button>
+                            <button type="button" class="reply-button">Reply <span>0</span></button>
+                            <button type="button" class="save-item-btn" aria-label="Save post" aria-pressed="false">Save</button>
                         </footer>
                     </div>
                 </article>
 
-                <article class="hiring-card">
+                <article class="hiring-card discussion-card" data-discussion-id="local-gift-shops">
                     <img
                         class="hiring-card__image"
                         src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTnrgIp7dlzod_6d8DBXAHG5G4jNvKqeNKKtwBbyQWfzA&s=10"
                         alt="Packages ready for delivery"
                     >
                     <div class="hiring-card__body">
+                        <div class="discussion-meta">
+                            <span class="hiring-card__username">Chris L.</span>
+                            <span aria-hidden="true">·</span>
+                            <span>Charlotte, NC</span>
+                            <span aria-hidden="true">·</span>
+                            <time datetime="2026-11-12">Nov 12, 2026</time>
+                        </div>
                         <h2>Favorite local shops for unique gifts?</h2>
                         <p>I’m hoping to find a thoughtful gift without ordering online. Which local shops have a good selection of handmade or one-of-a-kind items?</p>
-                        <footer class="hiring-card__meta">
-                            <span class="hiring-card__username">Chris L.</span>
-                            <span>NoDa</span>
-                            <time datetime="2026-11-12">Nov 12, 2026</time>
+                        <footer class="discussion-actions">
+                            <button type="button" class="reaction-button" aria-label="Like post" aria-pressed="false">👍 <span>15</span></button>
+                            <button type="button" class="reaction-button" aria-label="Dislike post" aria-pressed="false">👎 <span>2</span></button>
+                            <button type="button" class="reply-button">Reply <span>0</span></button>
+                            <button type="button" class="save-item-btn" aria-label="Save post" aria-pressed="false">Save</button>
                         </footer>
                     </div>
                 </article>
 
-                <article class="hiring-card">
+                <article class="hiring-card discussion-card" data-discussion-id="hanging-shelves">
                     <img
                         class="hiring-card__image"
                         src="https://static.vecteezy.com/system/resources/thumbnails/003/165/815/small/excavators-looking-over-plans-video.jpg"
                         alt="blue collared worker looking at plans"
                     >
                     <div class="hiring-card__body">
+                        <div class="discussion-meta">
+                            <span class="hiring-card__username">Alex P.</span>
+                            <span aria-hidden="true">·</span>
+                            <span>Charlotte, NC</span>
+                            <span aria-hidden="true">·</span>
+                            <time datetime="2026-11-11">Nov 11, 2026</time>
+                        </div>
                         <h2>Any tips for hanging shelves in an older home?</h2>
                         <p>I’m putting up a few shelves and the walls don’t seem to have studs where I need them. What anchors or methods have worked for you?</p>
-                        <footer class="hiring-card__meta">
-                            <span class="hiring-card__username">Alex P.</span>
-                            <span>Plaza Midwood</span>
-                            <time datetime="2026-11-11">Nov 11, 2026</time>
+                        <footer class="discussion-actions">
+                            <button type="button" class="reaction-button" aria-label="Like post" aria-pressed="false">👍 <span>21</span></button>
+                            <button type="button" class="reaction-button" aria-label="Dislike post" aria-pressed="false">👎 <span>1</span></button>
+                            <button type="button" class="reply-button">Reply <span>0</span></button>
+                            <button type="button" class="save-item-btn" aria-label="Save post" aria-pressed="false">Save</button>
                         </footer>
                     </div>
                 </article>
 
-                <article class="hiring-card">
+                <article class="hiring-card discussion-card" data-discussion-id="dog-walking">
                     <img
                         class="hiring-card__image"
                         src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSScSdSxf70K1JhgNfZyOjuBajW9YFDZrH2EnL5dp0tQ&s=10"
                         alt="Two dogs enjoying a walk outdoors"
                     >
                     <div class="hiring-card__body">
+                        <div class="discussion-meta">
+                            <span class="hiring-card__username">Sam K.</span>
+                            <span aria-hidden="true">·</span>
+                            <span>Charlotte, NC</span>
+                            <span aria-hidden="true">·</span>
+                            <time datetime="2026-11-10">Nov 10, 2026</time>
+                        </div>
                         <h2>Where do you take your dogs for a walk?</h2>
                         <p>We’re looking for new places to walk our dog nearby. Are there parks or trails you especially enjoy, and are any good for a weekend visit?</p>
-                        <footer class="hiring-card__meta">
-                            <span class="hiring-card__username">Sam K.</span>
-                            <span>Elizabeth</span>
-                            <time datetime="2026-11-10">Nov 10, 2026</time>
+                        <footer class="discussion-actions">
+                            <button type="button" class="reaction-button" aria-label="Like post" aria-pressed="false">👍 <span>18</span></button>
+                            <button type="button" class="reaction-button" aria-label="Dislike post" aria-pressed="false">👎 <span>0</span></button>
+                            <button type="button" class="reply-button">Reply <span>0</span></button>
+                            <button type="button" class="save-item-btn" aria-label="Save post" aria-pressed="false">Save</button>
                         </footer>
                     </div>
                 </article>
@@ -109,8 +503,288 @@
     </main>
     
     <div id="footer-placeholder"></div>
+
+    <dialog class="create-post-dialog" id="createPostDialog">
+        <form class="create-post-form" id="createPostForm" method="dialog">
+            <h2>Create a Discussion Post</h2>
+            <label>
+                Title
+                <input type="text" name="title" required>
+            </label>
+            <label>
+                City and State
+                <input
+                    type="text"
+                    name="location"
+                    value="Charlotte, NC"
+                    pattern="[^,]+,\s*[A-Za-z]{2}"
+                    title="Enter a city and two-letter state code, such as Charlotte, NC."
+                    required
+                >
+            </label>
+            <label>
+                Image (optional)
+                <input type="file" name="image" accept="image/*">
+            </label>
+            <label>
+                Details
+                <textarea name="details" rows="4" required></textarea>
+            </label>
+            <div class="dialog-actions">
+                <button type="button" class="reaction-button" id="cancelCreatePost">Cancel</button>
+                <button type="submit" class="discussion-create-button">Post</button>
+            </div>
+        </form>
+    </dialog>
+
+    <dialog class="comments-dialog" id="commentsDialog" aria-labelledby="commentsHeading">
+        <h2 id="commentsHeading">Replies</h2>
+        <p class="comments-post-title" id="commentsPostTitle"></p>
+        <div class="discussion-comment-list" id="discussionCommentList" aria-live="polite"></div>
+        <form class="discussion-comment-form" id="discussionCommentForm">
+            <label for="discussionReplyText">Write a reply</label>
+            <textarea id="discussionReplyText" name="reply" rows="3" maxlength="1000" required></textarea>
+            <div class="comments-dialog-actions">
+                <button type="button" class="reaction-button" id="closeComments">Close</button>
+                <button type="submit" class="discussion-create-button">Add Reply</button>
+            </div>
+        </form>
+    </dialog>
     
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const commentsByPost = new Map();
+            const commentsDialog = document.getElementById("commentsDialog");
+            const commentsTitle = document.getElementById("commentsPostTitle");
+            const commentsList = document.getElementById("discussionCommentList");
+            const commentForm = document.getElementById("discussionCommentForm");
+            const replyText = document.getElementById("discussionReplyText");
+            let activeCard = null;
+
+            function requireLogin() {
+                if (sessionStorage.getItem("craigslist-authenticated") === "true") {
+                    return true;
+                }
+
+                window.location.href = "login.html";
+                return false;
+            }
+
+            function attachReactions(card) {
+                card.querySelectorAll(".reaction-button").forEach(button => {
+                    button.addEventListener("click", () => {
+                        const wasActive = button.classList.toggle("is-active");
+                        button.setAttribute("aria-pressed", String(wasActive));
+                        const count = button.querySelector("span");
+                        if (count) {
+                            count.textContent = String(
+                                Math.max(0, Number(count.textContent) + (wasActive ? 1 : -1))
+                            );
+                        }
+                    });
+                });
+            }
+
+            function updateReplyCount(card) {
+                const count = commentsByPost.get(card.dataset.discussionId)?.length || 0;
+                const countLabel = card.querySelector(".reply-button span");
+                if (countLabel) countLabel.textContent = String(count);
+                card.querySelector(".reply-button")?.setAttribute(
+                    "aria-label",
+                    `View replies (${count})`
+                );
+            }
+
+            function renderComments(card) {
+                const comments = commentsByPost.get(card.dataset.discussionId) || [];
+                commentsList.replaceChildren();
+
+                if (comments.length === 0) {
+                    const emptyState = document.createElement("p");
+                    emptyState.className = "discussion-empty-comments";
+                    emptyState.textContent = "No replies yet. Be the first to respond.";
+                    commentsList.appendChild(emptyState);
+                    return;
+                }
+
+                comments.forEach(comment => {
+                    const item = document.createElement("article");
+                    item.className = "discussion-comment";
+
+                    const author = document.createElement("p");
+                    author.className = "discussion-comment__author";
+                    author.textContent = comment.author;
+
+                    const text = document.createElement("p");
+                    text.className = "discussion-comment__text";
+                    text.textContent = comment.text;
+
+                    const date = document.createElement("time");
+                    date.className = "discussion-comment__date";
+                    date.dateTime = comment.createdAt;
+                    date.textContent = new Date(comment.createdAt).toLocaleString();
+
+                    item.append(author, text, date);
+                    commentsList.appendChild(item);
+                });
+            }
+
+            function attachReplyButton(card) {
+                if (!card.dataset.discussionId) {
+                    card.dataset.discussionId = card.dataset.saveId ||
+                        `discussion-${card.querySelector("h2")?.textContent?.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
+                }
+
+                const button = card.querySelector(".reply-button");
+                if (!button) return;
+
+                updateReplyCount(card);
+                if (button.dataset.replyBound === "true") return;
+                button.dataset.replyBound = "true";
+                button.addEventListener("click", () => {
+                    if (!requireLogin()) return;
+
+                    activeCard = card;
+                    commentsTitle.textContent =
+                        card.querySelector("h2")?.textContent?.trim() || "Discussion";
+                    renderComments(card);
+                    commentsDialog.showModal();
+                    replyText.focus();
+                });
+            }
+
+            document.querySelectorAll(".discussion-card").forEach(card => {
+                attachReactions(card);
+                attachReplyButton(card);
+            });
+
+            document.getElementById("closeComments").addEventListener(
+                "click",
+                () => commentsDialog.close()
+            );
+
+            commentForm.addEventListener("submit", event => {
+                event.preventDefault();
+                if (!requireLogin()) {
+                    commentsDialog.close();
+                    return;
+                }
+
+                const text = replyText.value.trim();
+                if (!activeCard || !text) return;
+
+                const postId = activeCard.dataset.discussionId;
+                const comments = commentsByPost.get(postId) || [];
+                comments.push({
+                    author: "You",
+                    text,
+                    createdAt: new Date().toISOString()
+                });
+                commentsByPost.set(postId, comments);
+                renderComments(activeCard);
+                updateReplyCount(activeCard);
+                commentForm.reset();
+                replyText.focus();
+            });
+
+            const dialog = document.getElementById("createPostDialog");
+            const openButton = document.getElementById("createDiscussionPost");
+            const cancelButton = document.getElementById("cancelCreatePost");
+            const form = document.getElementById("createPostForm");
+
+            openButton.addEventListener("click", () => {
+                if (!requireLogin()) return;
+
+                dialog.showModal();
+            });
+            cancelButton.addEventListener("click", () => dialog.close());
+
+            form.addEventListener("submit", async event => {
+                event.preventDefault();
+                if (!requireLogin()) {
+                    dialog.close();
+                    return;
+                }
+
+                const data = new FormData(form);
+                const title = data.get("title").trim();
+                const locationInput = data.get("location").trim();
+                const details = data.get("details").trim();
+                const locationParts = locationInput.match(/^(.+),\s*([A-Za-z]{2})$/);
+                if (!title || !locationParts || !details) return;
+                const location = `${locationParts[1].trim()}, ${locationParts[2].toUpperCase()}`;
+
+                const card = document.createElement("article");
+                card.className = "hiring-card discussion-card";
+                card.dataset.saveId = `discussion-${Date.now()}`;
+                card.dataset.discussionId = card.dataset.saveId;
+
+                let imageElement;
+                const imageFile = form.elements.image.files[0];
+
+                if (imageFile) {
+                    imageElement = document.createElement("img");
+                    imageElement.className = "hiring-card__image";
+                    imageElement.alt = title;
+                    imageElement.src = await new Promise((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.onload = () => resolve(reader.result);
+                        reader.onerror = reject;
+                        reader.readAsDataURL(imageFile);
+                    });
+                } else {
+                    imageElement = document.createElement("div");
+                    imageElement.className = "hiring-card__image";
+                    imageElement.setAttribute("aria-hidden", "true");
+                }
+
+                const body = document.createElement("div");
+                body.className = "hiring-card__body";
+
+                const meta = document.createElement("div");
+                meta.className = "discussion-meta";
+                meta.innerHTML = '<span class="hiring-card__username">You</span><span aria-hidden="true">·</span>';
+                const locationText = document.createElement("span");
+                locationText.textContent = location;
+                const dateText = document.createElement("time");
+                dateText.dateTime = new Date().toISOString().slice(0, 10);
+                dateText.textContent = new Date().toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric"
+                });
+                meta.append(locationText);
+                meta.insertAdjacentHTML("beforeend", '<span aria-hidden="true">·</span>');
+                meta.append(dateText);
+
+                const heading = document.createElement("h2");
+                heading.textContent = title;
+                const paragraph = document.createElement("p");
+                paragraph.textContent = details;
+
+                const actions = document.createElement("footer");
+                actions.className = "discussion-actions";
+                actions.innerHTML =
+                    '<button type="button" class="reaction-button" aria-label="Like post" aria-pressed="false">👍 <span>0</span></button>' +
+                    '<button type="button" class="reaction-button" aria-label="Dislike post" aria-pressed="false">👎 <span>0</span></button>' +
+                    '<button type="button" class="reply-button">Reply <span>0</span></button>' +
+                    '<button type="button" class="save-item-btn" aria-label="Save post" aria-pressed="false">Save</button>';
+
+                body.append(meta, heading, paragraph, actions);
+                card.append(imageElement, body);
+                document.querySelector(".discussion-grid").prepend(card);
+                attachReactions(card);
+                attachReplyButton(card);
+                if (typeof initSaveButtons === "function") initSaveButtons();
+
+                dialog.close();
+                form.reset();
+                form.elements.location.value = "Charlotte, NC";
+            });
+        });
+    </script>
     <script src="../Scripts/navigation.js" defer></script>
     <script src="../Scripts/load-header.js" defer></script>
+    <script src="../Scripts/saved-items.js" defer></script>
 </body>
 </html>

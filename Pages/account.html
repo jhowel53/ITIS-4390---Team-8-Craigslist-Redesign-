@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Account Info</title>
+    <title>Account</title>
     <link rel="stylesheet" href="../Style/style.css">
 </head>
     
@@ -12,14 +12,46 @@
 
     <main class="content">
         <p id="account-success-message" class="success-message" role="status" aria-live="polite" hidden></p>
-        <h1>Account Info</h1>
-        <p>Account info here.</p>
+        <h1>Account</h1>
+
+        <section class="account-panel" aria-labelledby="account-info-heading">
+            <h2 id="account-info-heading">General Information</h2>
+            <p class="account-name">Name: <strong id="accountName"></strong></p>
+
+            <form class="account-form" id="accountEmailForm">
+                <label for="accountEmail">Email</label>
+                <input type="email" id="accountEmail" required>
+                <button type="submit" class="listing-create-button">Update Email</button>
+                <p class="account-status" id="emailStatus" role="status" aria-live="polite"></p>
+            </form>
+
+            <form class="account-form" id="accountPasswordForm">
+                <h3>Change Password</h3>
+                <label for="currentPassword">Current password</label>
+                <input type="password" id="currentPassword" autocomplete="current-password" required>
+                <label for="newPassword">New password</label>
+                <input type="password" id="newPassword" minlength="8" autocomplete="new-password" required>
+                <label for="confirmNewPassword">Confirm new password</label>
+                <input type="password" id="confirmNewPassword" minlength="8" autocomplete="new-password" required>
+                <button type="submit" class="listing-create-button">Update Password</button>
+                <p class="account-status" id="passwordStatus" role="status" aria-live="polite"></p>
+            </form>
+        </section>
+
+        <section class="account-panel" aria-labelledby="messages-heading">
+            <h2 id="messages-heading">Messages</h2>
+            <p id="messagesEmptyState">You have no messages yet.</p>
+            <div class="account-messages" id="accountMessages"></div>
+        </section>
+
+        <button type="button" class="listing-create-cancel account-sign-out" id="signOutButton">Sign Out</button>
     </main>
     
     <div id="footer-placeholder"></div>
     
     <script src="../Scripts/navigation.js" defer></script>
     <script src="../Scripts/load-header.js" defer></script>
+    <script src="../Scripts/account-store.js" defer></script>
     <script src="../Scripts/account.js" defer></script>
 </body>
 </html>
