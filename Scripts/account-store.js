@@ -1,6 +1,6 @@
 // Keeps account details and messages in the browser for this demo.
 window.CraigslistAccount = (() => {
-    // Keep the demo accounts, login state, and messages in browser storage.
+    // Keep the accounts, login state, and messages in browser storage.
     const USERS_KEY = "craigslist-users";
     const MESSAGES_KEY = "craigslist-messages";
     const AUTH_KEY = "craigslist-authenticated";
@@ -9,7 +9,7 @@ window.CraigslistAccount = (() => {
     const emailPattern = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
     const passwordIterations = 120000;
 
-    // Read stored lists carefully so damaged browser data doesn't pass silently.
+    // Read stored lists so damaged browser data doesn't pass silently.
     function readArray(key) {
         const raw = localStorage.getItem(key);
         if (!raw) {
@@ -89,7 +89,7 @@ window.CraigslistAccount = (() => {
         return users.find(user => user.email.toLowerCase() === email.toLowerCase());
     }
 
-    // New accounts get a unique ID and a salted password hash before they're saved.
+    // New accounts get a unique ID and a salted password hash before they're saved
     async function createUser(name, email, password) {
         const users = readArray(USERS_KEY);
         if (findUserByEmail(users, email)) {
@@ -116,7 +116,7 @@ window.CraigslistAccount = (() => {
         return createUser(name.trim(), email.trim().toLowerCase(), password);
     }
 
-    // Existing demo logins still work; new emails get a local account on first login.
+    // Existing logins still work; new emails get an account on first login.
     async function signIn(email, password) {
         const normalizedEmail = email.trim().toLowerCase();
         const users = readArray(USERS_KEY);
@@ -146,7 +146,7 @@ window.CraigslistAccount = (() => {
         return user;
     }
 
-    // Update the account record and keep the current session pointing at it.
+    // Update the account record
     function updateEmail(email) {
         const user = currentUser();
         if (!user) {
@@ -179,7 +179,7 @@ window.CraigslistAccount = (() => {
         return storedUser;
     }
 
-    // Check the old password first, then replace it with a fresh salted hash.
+    // Check the old password, then replace it.
     async function changePassword(currentPassword, newPassword) {
         const user = currentUser();
         if (!user) {
@@ -233,7 +233,7 @@ window.CraigslistAccount = (() => {
         writeArray(MESSAGES_KEY, messages);
     }
 
-    // Show sent messages and anything addressed to the signed-in account.
+    // Show sent messages
     function messagesForCurrentUser() {
         const user = currentUser();
         if (!user) {

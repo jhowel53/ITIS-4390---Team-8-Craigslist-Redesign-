@@ -147,7 +147,7 @@ function initHeaderEvents() {
     });
 }
 
-// Load the shared header and point signed-in visitors to their account.
+// Load header and point signed-in visitors to their account.
 document.addEventListener("DOMContentLoaded", function () {
     fetch('../Components/header.html')
         .then(response => {

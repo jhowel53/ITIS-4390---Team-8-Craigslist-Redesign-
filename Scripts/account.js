@@ -26,33 +26,125 @@ if (sessionStorage.getItem("craigslist-authenticated") !== "true" || !accountUse
     // Rebuild the mailbox from the messages tied to this account.
     function renderMessages() {
         const messages = window.CraigslistAccount.messagesForCurrentUser();
+        const conversations = new Map();
         messagesContainer.replaceChildren();
-        messagesEmptyState.hidden = messages.length > 0;
 
+        // Group messages by seller and listing so each chat has one reply bar.
         messages.forEach(message => {
-            const article = document.createElement("article");
-            article.className = "account-message";
+            const isSent = message.senderId === accountUser.id ||
+                message.senderEmail === accountUser.email;
+            const personName = isSent ? message.recipientName : message.senderName;
+            const personEmail = isSent ? message.recipientEmail : message.senderEmail;
+            const title = message.listingTitle || "Chat";
+            const key = personName.toLowerCase() + "|" + title.toLowerCase();
+            let conversation = conversations.get(key);
 
-            const direction = document.createElement("p");
-            direction.className = "account-message-direction";
-            direction.textContent = message.senderId === accountUser.id
-                ? "Sent to " + message.recipientName
-                : "Received from " + message.senderName;
+            if (!conversation) {
+                conversation = {
+                    name: personName,
+                    email: personEmail || "",
+                    title,
+                    messages: []
+                };
+                conversations.set(key, conversation);
+            } else if (!conversation.email && personEmail) {
+                conversation.email = personEmail;
+            }
+
+            conversation.messages.push(message);
+        });
+
+        messagesEmptyState.hidden = conversations.size > 0;
+
+        conversations.forEach(conversation => {
+            const article = document.createElement("article");
+            article.className = "account-conversation";
 
             const heading = document.createElement("h3");
-            heading.textContent = message.listingTitle;
+            heading.textContent = "Chat with " + conversation.name;
 
-            const body = document.createElement("p");
-            body.textContent = message.body;
+            const listing = document.createElement("p");
+            listing.className = "account-conversation-listing";
+            listing.textContent = "About: " + conversation.title;
 
-            const time = document.createElement("time");
-            time.dateTime = message.createdAt;
-            time.textContent = new Intl.DateTimeFormat("en-US", {
-                dateStyle: "medium",
-                timeStyle: "short"
-            }).format(new Date(message.createdAt));
+            const history = document.createElement("div");
+            history.className = "account-chat-history";
+            conversation.messages.sort(
+                (first, second) => new Date(first.createdAt) - new Date(second.createdAt)
+            );
 
-            article.append(direction, heading, body, time);
+            conversation.messages.forEach(message => {
+                const isSent = message.senderId === accountUser.id ||
+                    message.senderEmail === accountUser.email;
+                const bubble = document.createElement("article");
+                bubble.className = isSent
+                    ? "account-chat-message account-chat-message--sent"
+                    : "account-chat-message";
+
+                const direction = document.createElement("p");
+                direction.className = "account-message-direction";
+                direction.textContent = isSent ? "You" : message.senderName;
+
+                const body = document.createElement("p");
+                body.textContent = message.body;
+
+                const time = document.createElement("time");
+                time.dateTime = message.createdAt;
+                time.textContent = new Intl.DateTimeFormat("en-US", {
+                    dateStyle: "medium",
+                    timeStyle: "short"
+                }).format(new Date(message.createdAt));
+
+                bubble.append(direction, body, time);
+                history.appendChild(bubble);
+            });
+
+            const composer = document.createElement("form");
+            composer.className = "account-chat-form";
+
+            const input = document.createElement("input");
+            input.type = "text";
+            input.name = "message";
+            input.maxLength = 2000;
+            input.placeholder = "Write a message...";
+            input.setAttribute("aria-label", "Message " + conversation.name);
+            input.required = true;
+
+            const sendButton = document.createElement("button");
+            sendButton.type = "submit";
+            sendButton.className = "listing-create-button";
+            sendButton.textContent = "Send";
+
+            const status = document.createElement("p");
+            status.className = "account-status";
+            status.setAttribute("role", "status");
+            status.setAttribute("aria-live", "polite");
+
+            composer.append(input, sendButton, status);
+            composer.addEventListener("submit", event => {
+                event.preventDefault();
+                const body = input.value.trim();
+                if (!body) {
+                    status.textContent = "Type a message before sending.";
+                    input.focus();
+                    return;
+                }
+
+                try {
+                    window.CraigslistAccount.sendMessage({
+                        recipientName: conversation.name,
+                        recipientEmail: conversation.email,
+                        listingTitle: conversation.title,
+                        body
+                    });
+                    renderMessages();
+                } catch (error) {
+                    console.error("Unable to send chat message.", error);
+                    status.textContent = error.message || "Unable to send the message.";
+                }
+            });
+
+            article.append(heading, listing, history, composer);
             messagesContainer.appendChild(article);
         });
     }
@@ -86,7 +178,7 @@ if (sessionStorage.getItem("craigslist-authenticated") !== "true" || !accountUse
             return;
         }
 
-        // The account store checks the current password before saving the new one.
+        // checks the current password before saving the new one.
         try {
             await window.CraigslistAccount.changePassword(currentPassword, newPassword);
             passwordForm.reset();

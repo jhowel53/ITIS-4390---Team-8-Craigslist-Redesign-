@@ -1387,10 +1387,34 @@ html[data-theme="dark"] .market-filters {
     gap: 12px;
 }
 
-.account-message {
+.account-conversation {
     padding: 16px;
     border: 1px solid #e1d7e7;
     border-radius: 10px;
+}
+
+.account-conversation-listing {
+    color: #6b6570;
+    font-size: 0.9rem;
+}
+
+.account-chat-history {
+    display: grid;
+    gap: 8px;
+    margin: 14px 0;
+}
+
+.account-chat-message {
+    max-width: 85%;
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: #f3eff6;
+    overflow-wrap: anywhere;
+}
+
+.account-chat-message--sent {
+    margin-left: auto;
+    background: #e9dcf1;
 }
 
 .account-message-direction {
@@ -1399,15 +1423,44 @@ html[data-theme="dark"] .market-filters {
     font-weight: 700;
 }
 
-.account-message h3 {
+.account-conversation h3 {
     margin: 6px 0;
 }
 
-.account-message time {
+.account-chat-message time {
     display: block;
     margin-top: 10px;
     color: #6b6570;
     font-size: 0.8rem;
+}
+
+.account-chat-form {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
+    align-items: start;
+}
+
+.account-chat-form input {
+    box-sizing: border-box;
+    min-width: 0;
+    width: 100%;
+    border: 1px solid #d7c9df;
+    border-radius: 999px;
+    padding: 10px 14px;
+    font: inherit;
+}
+
+.account-chat-form button {
+    grid-column: 2;
+    grid-row: 1;
+    margin-top: 0;
+    padding: 8px 14px;
+}
+
+.account-chat-form .account-status {
+    grid-column: 1 / -1;
+    margin: 0;
 }
 
 .account-sign-out {
@@ -1568,7 +1621,8 @@ html[data-theme="dark"] .listing-create-status {
 
 html[data-theme="dark"] .contact-seller-recipient,
 html[data-theme="dark"] .contact-seller-listing,
-html[data-theme="dark"] .account-message time {
+html[data-theme="dark"] .account-chat-message time,
+html[data-theme="dark"] .account-conversation-listing {
     color: #d6c6df;
 }
 
@@ -1582,8 +1636,22 @@ html[data-theme="dark"] .contact-seller-btn {
     color: #f5f5f5;
 }
 
-html[data-theme="dark"] .account-message {
+html[data-theme="dark"] .account-conversation {
     border-color: #5c5065;
+}
+
+html[data-theme="dark"] .account-chat-message {
+    background: #342d3b;
+}
+
+html[data-theme="dark"] .account-chat-message--sent {
+    background: #493357;
+}
+
+html[data-theme="dark"] .account-chat-form input {
+    border-color: #82738e;
+    background: #29252f;
+    color: #f5eff8;
 }
 
 html[data-theme="dark"] .account-message-direction {

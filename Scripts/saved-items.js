@@ -122,7 +122,7 @@ function initSaveButtons() {
     const allMatching = Array.from(main.querySelectorAll(CARD_SELECTOR));
     const cards = allMatching.filter(el => !el.parentElement?.closest(CARD_SELECTOR));
 
-    // Only wire up top-level cards, so nested cards don't get duplicate controls.
+    // Only wire top-level cards, so nested cards don't get duplicate controls.
     cards.forEach((card, index) => {
         addLearnMoreButton(card);
 
@@ -166,7 +166,7 @@ function renderSavedPage() {
 
     if (emptyState) emptyState.hidden = true;
 
-    // Recreate saved cards from the browser's stored listing snapshots.
+    // Recreate saved cards from the browser's stored listing pics.
     items.forEach(item => {
         const article = document.createElement("article");
         article.className = "hiring-card saved-card";

@@ -1,6 +1,6 @@
 // Adds a contact form to listings and saves messages to the user's inbox.
 document.addEventListener("DOMContentLoaded", () => {
-    // Build one shared dialog so each card can open the same compose form.
+    // Build one shared dialog.
     const dialog = document.createElement("dialog");
     dialog.className = "contact-seller-dialog";
 
@@ -77,7 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const title =
             activePost.querySelector("h1, h2, h3, h4")?.textContent.trim() || "Listing";
 
-        // Save the message to the sender's and seller's local inboxes.
+        // Save the message to the sender's and seller's inboxes.
         try {
             window.CraigslistAccount.sendMessage({
                 recipientName: sellerName,
@@ -96,7 +96,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     window.initContactSellerButtons = () => {
-        // Keep Contact Seller beside Save, and skip listings owned by this account.
+        // Keep Contact Seller beside Save, and skip listings owned posts.
         document.querySelectorAll("main.content .hiring-card").forEach(card => {
             const saveButton = card.querySelector(".save-item-btn");
             if (!saveButton || card.querySelector(".contact-seller-btn")) {

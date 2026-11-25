@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const status = document.getElementById("createListingStatus");
     const grid = document.querySelector(".listing-card-grid");
 
-    // Send signed-out visitors through the existing login page.
+    // Send signed-out visitors to the login page.
     function requireLogin() {
         if (sessionStorage.getItem("craigslist-authenticated") === "true") {
             return true;
@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Load an optional upload as a data URL for the new card.
+    // Optional upload for new post.
     function readImage(file) {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
-        // Build a safe card from the form fields, then register it with the page.
+        // Build a card from the form, then register it with the page.
         const card = document.createElement("article");
         const currentUser = window.CraigslistAccount.currentUser();
         card.className = "hiring-card";
