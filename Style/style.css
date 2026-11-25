@@ -301,7 +301,7 @@ body {
 
 .header_nav_bottom {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     align-items: center;
     justify-content: center;
     gap: 0;
@@ -1236,4 +1236,41 @@ html[data-theme="dark"] textarea:focus-visible {
     .theme_status {
         display: none;
     }
+}
+
+.save-item-btn {
+    margin-top: 14px;
+    padding: 8px 16px;
+    border: 1px solid #7e35a8;
+    border-radius: 999px;
+    background: #ddd0e2be;
+    color: #222;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease;
+}
+
+.save-item-btn:hover,
+.save-item-btn:focus-visible {
+    background: #936ca9;
+    color: #fff;
+}
+
+.save-item-btn.is-saved {
+    background: #7e35a8;
+    border-color: #7e35a8;
+    color: #fff;
+}
+
+html[data-theme="dark"] .save-item-btn {
+    background: #3a2b42;
+    border-color: #c77dff;
+    color: #f5f5f5;
+}
+
+html[data-theme="dark"] .save-item-btn.is-saved {
+    background: #9c4dcc;
+    border-color: #c77dff;
+    color: #fff;
 }

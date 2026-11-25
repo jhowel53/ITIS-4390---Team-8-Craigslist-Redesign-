@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,110 +6,566 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Craigslist Redesign</title>
     <link rel="stylesheet" href="../Style/style.css">
+
+    <style>
+        /* Marketplace filters */
+        .market-filters {
+            --filter-bg: #ffffff;
+            --filter-text: #242128;
+            --filter-border: #d7c9df;
+            --filter-accent: #602583;
+            --filter-muted: #514a56;
+            --filter-selected: #f0e4f7;
+
+            background: var(--filter-bg);
+            color: var(--filter-text);
+            border: 1px solid var(--filter-border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        /* Dark mode */
+        html[data-theme="dark"] .market-filters {
+            --filter-bg: #29252f;
+            --filter-text: #f5eff8;
+            --filter-border: #82738e;
+            --filter-accent: #e5b6ff;
+            --filter-muted: #ddd3e4;
+            --filter-selected: #493357;
+            color-scheme: dark;
+        }
+
+        /* Filter heading */
+        .filter-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .filter-heading h2 {
+            font-size: 24px;
+            line-height: 32px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        /* Filter controls */
+        .filter-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .filter-group label {
+            font-size: 14px;
+            line-height: 20px;
+            font-weight: 600;
+        }
+
+        .filter-group select {
+            box-sizing: border-box;
+            width: 100%;
+            background: var(--filter-bg);
+            color: var(--filter-text);
+            border: 1px solid var(--filter-border);
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 16px;
+            line-height: 24px;
+            min-height: 48px;
+            cursor: pointer;
+        }
+
+        .filter-group select.active-filter {
+            border-color: var(--filter-accent);
+            background: var(--filter-selected);
+        }
+
+        /* Clear filters button */
+        #clearFilters {
+            background: transparent;
+            color: var(--filter-accent);
+            border: 1px solid var(--filter-accent);
+            border-radius: 24px;
+            padding: 10px 16px;
+            min-height: 44px;
+            font-size: 14px;
+            line-height: 20px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        #clearFilters:hover {
+            background: var(--filter-accent);
+            color: var(--filter-bg);
+        }
+
+        #clearFilters:disabled {
+            opacity: 0.5;
+            cursor: default;
+            background: transparent;
+            color: var(--filter-accent);
+        }
+
+        /* Keyboard accessibility */
+        .market-filters button:focus-visible,
+        .market-filters select:focus-visible {
+            outline: 3px solid var(--filter-accent);
+            outline-offset: 3px;
+        }
+
+        /* Selected filter indicators */
+        .active-filters {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 20px;
+        }
+
+        .active-filters:empty {
+            display: none;
+        }
+
+        .filter-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid var(--filter-accent);
+            background: var(--filter-selected);
+            color: var(--filter-accent);
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            line-height: 20px;
+            cursor: pointer;
+        }
+
+        .filter-chip:hover {
+            background: var(--filter-accent);
+            color: var(--filter-bg);
+        }
+
+        /* Result count */
+        #filterResults {
+            color: var(--filter-muted);
+            font-size: 14px;
+            line-height: 20px;
+            margin: 16px 0 0;
+        }
+
+        /* Hide listings that do not match */
+        .hiring-card.filtered-out,
+        .hiring-card[hidden] {
+            display: none !important;
+        }
+
+        /* Smaller screens */
+        @media (max-width: 600px) {
+            .market-filters {
+                padding: 16px;
+            }
+
+            .filter-controls {
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .filter-group {
+                min-width: 0;
+            }
+
+            .filter-heading h2 {
+                font-size: 22px;
+            }
+        }
+    </style>
 </head>
-    
+
 <body>
+
     <div id="header-placeholder"></div>
 
     <main class="content">
         <section class="hiring-posts" aria-labelledby="marketplace-title">
+
             <header class="hiring-posts__header">
                 <h1 id="marketplace-title">Neighborhood Marketplace</h1>
-                <p>Browse pre-loved clothes, electronics, furniture, and more from local sellers.</p>
+                <p>
+                    Browse pre-loved clothes, electronics, furniture,
+                    and more from local sellers.
+                </p>
             </header>
 
+            <!-- Marketplace filters -->
+            <section class="market-filters" aria-label="Listing filters">
+
+                <div class="filter-heading">
+                    <h2>Filters</h2>
+
+                    <button type="button" id="clearFilters">
+                        Clear Filters
+                    </button>
+                </div>
+
+                <div class="filter-controls">
+
+                    <div class="filter-group">
+                        <label for="categoryFilter">Category</label>
+
+                        <select id="categoryFilter">
+                            <option value="all">All Categories</option>
+                            <option value="clothing">Clothing</option>
+                            <option value="electronics">Electronics</option>
+                            <option value="furniture">Furniture</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="priceFilter">Price Range</label>
+
+                        <select id="priceFilter">
+                            <option value="all">Any Price</option>
+                            <option value="under50">Under $50</option>
+                            <option value="50to200">$50 - $200</option>
+                            <option value="over200">Over $200</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="active-filters" id="activeFilters"></div>
+
+                <p id="filterResults" role="status" aria-live="polite">
+                    5 listings available
+                </p>
+
+            </section>
+
+            <!-- Marketplace listings -->
             <div class="hiring-posts__grid">
-                <article class="hiring-card">
+
+                <article class="hiring-card"
+                         data-category="clothing"
+                         data-price="25">
+
                     <img
                         class="hiring-card__image"
                         src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhbFaVcArB6GtgzhOIeAQdvL09qaoJEO3MHi3Qe1MMMw&s=10"
                         alt="Classic denim jacket for sale"
                     >
+
                     <div class="hiring-card__body">
                         <h2>Classic Denim Jacket</h2>
+
                         <p>$25 · Size medium. Gently worn with no stains or tears. Great for layering; pickup near South End.</p>
+
                         <footer class="hiring-card__meta">
                             <span class="hiring-card__username">Maya R.</span>
                             <span>South End</span>
                             <time datetime="2026-11-14">Nov 14, 2026</time>
                         </footer>
                     </div>
+
                 </article>
 
-                <article class="hiring-card">
+                <article class="hiring-card"
+                         data-category="electronics"
+                         data-price="180">
+
                     <img
                         class="hiring-card__image"
                         src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTq9EbVKaqKwJzC-X5EFD6pfWEKOy-ZqdiyKvt_AcX_Mg&s=10"
                         alt="Flat-screen television"
                     >
+
                     <div class="hiring-card__body">
                         <h2>50-Inch 4K Smart TV</h2>
+
                         <p>$180 · Works perfectly and includes the remote and stand. Ready for pickup in University City.</p>
+
                         <footer class="hiring-card__meta">
                             <span class="hiring-card__username">Jordan T.</span>
                             <span>University City</span>
                             <time datetime="2026-11-13">Nov 13, 2026</time>
                         </footer>
                     </div>
+
                 </article>
 
-                <article class="hiring-card">
+                <article class="hiring-card"
+                         data-category="furniture"
+                         data-price="220">
+
                     <img
                         class="hiring-card__image"
                         src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRq4W9oqOmsynB_fYFqA99QBJ3VJrgu3GgQpsfUOxcinQ&s"
                         alt="Comfortable gray sofa"
                     >
+
                     <div class="hiring-card__body">
                         <h2>Gray Two-Seat Sofa</h2>
+
                         <p>$220 · Comfortable and in good condition, from a smoke-free home. Buyer arranges pickup in NoDa.</p>
+
                         <footer class="hiring-card__meta">
                             <span class="hiring-card__username">Chris L.</span>
                             <span>NoDa</span>
                             <time datetime="2026-11-12">Nov 12, 2026</time>
                         </footer>
                     </div>
+
                 </article>
 
-                <article class="hiring-card">
+                <article class="hiring-card"
+                         data-category="furniture"
+                         data-price="150">
+
                     <img
                         class="hiring-card__image"
                         src="https://img5.su-cdn.com/cdn-cgi/image/width=750,height=750/uploads%2F75ff3329df7943ffbf4d6f20269476b1_.jpg"
                         alt="Dining table and chairs"
                     >
+
                     <div class="hiring-card__body">
                         <h2>Dining Table with Four Chairs</h2>
+
                         <p>$150 · Solid wood set with light wear. Seats four and would be a great fit for a smaller dining space.</p>
+
                         <footer class="hiring-card__meta">
                             <span class="hiring-card__username">Alex P.</span>
                             <span>Plaza Midwood</span>
                             <time datetime="2026-11-11">Nov 11, 2026</time>
                         </footer>
                     </div>
+
                 </article>
 
-                <article class="hiring-card">
+                <article class="hiring-card"
+                         data-category="clothing"
+                         data-price="35">
+
                     <img
                         class="hiring-card__image"
                         src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSl3PKkmaqo3cVhBAIy-mPeQOi0WzoHfDA8fSROH6Izdg&s=10"
                         alt="Athletic sneakers"
                     >
+
                     <div class="hiring-card__body">
                         <h2>Running Sneakers</h2>
+
                         <p>$35 · Men's size 9, lightly used and still in great shape. Meet up near Elizabeth or arrange a local pickup.</p>
+
                         <footer class="hiring-card__meta">
                             <span class="hiring-card__username">Sam K.</span>
                             <span>Elizabeth</span>
                             <time datetime="2026-11-10">Nov 10, 2026</time>
                         </footer>
                     </div>
+
                 </article>
+
             </div>
+
         </section>
     </main>
+
     
     <div id="footer-placeholder"></div>
-    
     <script src="../Scripts/navigation.js" defer></script>
     <script src="../Scripts/load-header.js" defer></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+
+            const categoryFilter = document.getElementById("categoryFilter");
+            const priceFilter = document.getElementById("priceFilter");
+            const clearFilters = document.getElementById("clearFilters");
+            const filterResults = document.getElementById("filterResults");
+            const activeFilters = document.getElementById("activeFilters");
+
+            const cards = Array.from(
+                document.querySelectorAll(".hiring-card")
+            );
+
+            // Display selected filters as removable chips
+            function updateActiveFilters() {
+
+                activeFilters.replaceChildren();
+
+                function createChip(select, label) {
+
+                    if (select.value === "all") {
+                        return;
+                    }
+
+                    const chip = document.createElement("button");
+
+                    chip.type = "button";
+                    chip.className = "filter-chip";
+
+                    const selectedText =
+                        select.options[select.selectedIndex].text;
+
+                    chip.textContent =
+                        label + ": " + selectedText + " ×";
+
+                    chip.setAttribute(
+                        "aria-label",
+                        "Remove " + label + " filter"
+                    );
+
+                    chip.addEventListener("click", () => {
+                        select.value = "all";
+                        applyFilters();
+                        select.focus();
+                    });
+
+                    activeFilters.appendChild(chip);
+                }
+
+                createChip(categoryFilter, "Category");
+                createChip(priceFilter, "Price");
+            }
+
+            // Apply the selected category and price filters
+            function applyFilters() {
+
+                let visibleCount = 0;
+
+                cards.forEach(card => {
+
+                    const category = card.dataset.category;
+                    const price = card.hasAttribute("data-price")
+                        ? Number(card.dataset.price)
+                        : NaN;
+
+                    const categoryMatch =
+                        categoryFilter.value === "all" ||
+                        categoryFilter.value === category;
+
+                    let priceMatch = true;
+
+                    switch (priceFilter.value) {
+
+                        case "under50":
+                            priceMatch = price < 50;
+                            break;
+
+                        case "50to200":
+                            priceMatch =
+                                price >= 50 && price <= 200;
+                            break;
+
+                        case "over200":
+                            priceMatch = price > 200;
+                            break;
+
+                        default:
+                            priceMatch = true;
+                    }
+
+                    const matches =
+                        categoryMatch && priceMatch;
+
+                    card.classList.toggle(
+                        "filtered-out",
+                        !matches
+                    );
+
+                    if (
+                        matches &&
+                        !card.hidden &&
+                        getComputedStyle(card).display !== "none"
+                    ) {
+                        visibleCount++;
+                    }
+
+                });
+
+                // Highlight selected filters
+                categoryFilter.classList.toggle(
+                    "active-filter",
+                    categoryFilter.value !== "all"
+                );
+
+                priceFilter.classList.toggle(
+                    "active-filter",
+                    priceFilter.value !== "all"
+                );
+
+                // Disable clear button if no filters are active
+                clearFilters.disabled =
+                    categoryFilter.value === "all" &&
+                    priceFilter.value === "all";
+
+                // Update the number of matching listings
+                if (visibleCount === 0) {
+                    filterResults.textContent =
+                        "No matching listings found. Try changing your filters.";
+                } else {
+                    filterResults.textContent =
+                        visibleCount +
+                        (visibleCount === 1
+                            ? " listing available"
+                            : " listings available");
+                }
+
+                updateActiveFilters();
+            }
+
+            // Update filters immediately when selections change
+            categoryFilter.addEventListener(
+                "change",
+                applyFilters
+            );
+
+            priceFilter.addEventListener(
+                "change",
+                applyFilters
+            );
+
+            // Reset both filters
+            clearFilters.addEventListener("click", () => {
+
+                categoryFilter.value = "all";
+                priceFilter.value = "all";
+
+                applyFilters();
+                categoryFilter.focus();
+
+            });
+
+            // Keep results synchronized with header search
+            const observer = new MutationObserver(() => {
+                applyFilters();
+            });
+
+            cards.forEach(card => {
+
+                observer.observe(card, {
+                    attributes: true,
+                    attributeFilter: ["hidden", "style"]
+                });
+
+            });
+
+            // Display all listings on initial page load
+            applyFilters();
+
+        });
+    </script>
+
 </body>
 </html>
